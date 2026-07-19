@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="../src-tauri/icons/icon.png" alt="Clash" width="128" />
+  <img src="../src-tauri/icons/icon.png" alt="MEOW" width="128" />
   <br>
-  <a href="https://github.com/zzzgydi/clash-verge">Clash Verge</a> の継続プロジェクト
+  MEOW — independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-rev">Clash Verge Rev</a>, currently in its initial brand redesign phase
   <br>
 </h1>
 
@@ -19,6 +19,9 @@
   <a href="./README_ko.md">한국어</a> ·
   <a href="./README_fa.md">فارسی</a>
 </p>
+
+> [!IMPORTANT]
+> MEOW is an unofficial independent fork of Clash Verge Rev. Its current initialization phase is limited to brand presentation, while independent features may be added later. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
 ## プレビュー
 
@@ -43,37 +46,6 @@ Windows (x64/x86)、Linux (x64/arm64)、macOS 10.15+ (Intel/Apple) をサポー�
 
 詳しい導入手順やトラブルシュートは [ドキュメントサイト](https://clash-verge-rev.github.io/) を参照してください。
 
-### Telegram チャンネル
-
-更新情報は [@clash_verge_rev](https://t.me/clash_verge_re) をフォローしてください。
-
----
-
-## プロモーション
-
-#### [Doggygo VPN — 高性能グローバルアクセラレータ](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-- 無料トライアル、割引プラン、ストリーミング解放、世界初の Hysteria プロトコル対応を備えた高性能海外ネットワークサービス。
-- Clash Verge 専用リンクから登録すると、3 日間・1 日 1 GB の無料体験が利用できます。 [登録はこちら](https://verge.dginv.click/#/register?code=oaxsAGo6)
-- Clash Verge 利用者限定 20% オフクーポン: `verge20`（先着 500 名）
-- 月額 15.8 元で 160 GB を利用できるプラン、年額契約ならさらに 20% オフ
-- 海外チーム運営による高信頼サービス、収益シェアは最大 50%
-- 負荷分散クラスタと高速専用回線（旧クライアント互換）、極低レイテンシで 4K も快適
-- 世界初の **QUIC プロトコル**対応。より高速な QUIC 系プロトコルを提供（Clash Verge クライアントとの相性抜群）
-- ストリーミングおよび ChatGPT の利用にも対応
-- 公式サイト: [https://狗狗加速.com](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-### 🤖 [GPTKefu — Crisp と深く統合された AI スマートカスタマーサービスプラットフォーム](https://gptkefu.com)
-
-- 🧠 完全な会話コンテキスト＋画像認識を深く理解し、専門的で正確な回答を自動生成 — 機械的な応答はもう不要。
-- ♾️ **回答数無制限**、クォータの心配なし — 1 件ごとに課金する他の AI カスタマーサービスとは一線を画します。
-- 💬 プリセールス、アフターサポート、複雑な Q&A — あらゆるシナリオを簡単にカバー。実績ある導入事例で効果を実証。
-- ⚡ 3 分で導入、ゼロ学習コスト — カスタマーサービスの効率と顧客満足度を即座に向上。
-- 🎁 プレミアムプラン 14 日間無料トライアル — まず試してから購入: 👉 [無料トライアル開始](https://gptkefu.com)
-- 📢 AI カスタマーサービス TG チャンネル: [@crisp_ai](https://t.me/crisp_ai)
-
----
-
 ## 機能
 
 - 高性能な Rust と Tauri 2 フレームワークに基づくデスクトップアプリ
@@ -87,10 +59,6 @@ Windows (x64/x86)、Linux (x64/arm64)、macOS 10.15+ (Intel/Apple) をサポー�
 ### FAQ
 
 プラットフォーム別の案内は [FAQ ページ](https://clash-verge-rev.github.io/faq/windows.html) を参照してください。
-
-### 寄付
-
-[Clash Verge Rev の開発を支援する](https://github.com/sponsors/clash-verge-rev)
 
 ## 開発
 

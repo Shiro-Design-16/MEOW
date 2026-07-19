@@ -1,6 +1,13 @@
 # CONTRIBUTING
 
-Thank you for your interest in contributing to **Clash Verge Rev**! This guide provides instructions to help you set up your development environment and start contributing effectively.
+Thank you for your interest in contributing to **MEOW**! MEOW is an unofficial independent fork of [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev). During the current initialization phase, changes are limited to brand presentation, such as the name, logos, icons, copy, and related metadata; independent features may be introduced in later development phases.
+
+Before opening a pull request, please keep these boundaries in mind:
+
+- Report MEOW-specific issues in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not to the upstream maintainers.
+- Keep branding changes separate from functional changes.
+- For a proposed behavior change, explain why it belongs in MEOW and how it will be maintained when syncing with upstream.
+- Preserve upstream authorship, license notices, and changelog history.
 
 ## Internationalization (i18n)
 
@@ -133,4 +140,4 @@ Signed commits are required to verify authorship and ensure your contributions c
 
 4. Push your branch and submit a pull request.
 
-We appreciate your contributions and look forward to your participation!
+We appreciate your contributions to MEOW!

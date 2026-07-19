@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="../src-tauri/icons/icon.png" alt="Clash" width="128" />
+  <img src="../src-tauri/icons/icon.png" alt="MEOW" width="128" />
   <br>
-  Continuation of <a href="https://github.com/zzzgydi/clash-verge">Clash Verge</a>
+  MEOW — independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-rev">Clash Verge Rev</a>, currently in its initial brand redesign phase
   <br>
 </h1>
 
@@ -19,6 +19,10 @@ Clash Meta GUI базируется на <a href="https://github.com/tauri-apps/
   <a href="./README_ko.md">한국어</a> ·
   <a href="./README_fa.md">فارسی</a>
 </p>
+
+> [!IMPORTANT]
+> MEOW is an unofficial independent fork of Clash Verge Rev. Its current initialization phase is limited to brand presentation, while independent features may be added later. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
+
 ## Предпросмотр
 
 | Тёмная тема                        | Светлая тема                         |
@@ -41,35 +45,6 @@ Clash Meta GUI базируется на <a href="https://github.com/tauri-apps/
 
 #### Инструкции по установке и ответы на часто задаваемые вопросы можно найти на [странице документации](https://clash-verge-rev.github.io/)
 
-### TG канал: [@clash_verge_rev](https://t.me/clash_verge_re)
-
----
-
-## Продвижение
-
-#### [Doggygo VPN —— технический VPN-сервис (айрпорт)](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-- Высокопроизводительный иностранный VPN-сервис (айрпорт) с бесплатным пробным периодом, выгодными тарифами, возможностью разблокировки потокового ТВ и первым в мире поддержкой протокола Hysteria.
-- Зарегистрируйтесь по эксклюзивной ссылке Clash Verge и получите 3 дня бесплатного использования, 1 Гб трафика в день: [регистрация](https://verge.dginv.click/#/register?code=oaxsAGo6)
-- Эксклюзивный промо-код на скидку 20% для Clash Verge: verge20 (только 500 штук)
-- Специальный тарифный план всего за 15,8 юаней в месяц, 160 Гб трафика, скидка 20% при оплате за год
-- Команда за рубежом, без риска побега, до 50% кэшбэка
-- Архитектура с балансировкойнагрузки, высокоскоростная выделенная линия (совместима со старыми клиентами), чрезвычайно низкая задержка, без проблем в часы пик, 4K видео загружается мгновенно
-- Первый в мире VPN-сервис (айрпорт) на **протоколе QUIC**, теперь с более быстрыми протоколами семейства QUIC (лучшее сочетание с клиентом Clash Verge)
-- Разблокировка потоковые сервисы и ChatGPT
-- Официальный сайт: [https://狗狗加速.com](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-### 🤖 [GPTKefu — AI-платформа умного обслуживания клиентов с глубокой интеграцией Crisp](https://gptkefu.com)
-
-- 🧠 Глубокое понимание полного контекста диалога + распознавание изображений, автоматически даёт профессиональные и точные ответы — никаких шаблонных ответов.
-- ♾️ **Без ограничения количества ответов**, без беспокойства о квотах — в отличие от других AI-сервисов, берущих плату за каждое сообщение.
-- 💬 Предпродажные консультации, послепродажная поддержка, решение сложных вопросов — легко покрывает все сценарии, подтверждено реальными кейсами.
-- ⚡ Настройка за 3 минуты, без порога входа — мгновенное повышение эффективности обслуживания и удовлетворённости клиентов.
-- 🎁 Бесплатный 14-дневный пробный период премиум-плана — сначала попробуйте, потом платите: 👉 [Начать бесплатно](https://gptkefu.com)
-- 📢 TG-канал AI-поддержки: [@crisp_ai](https://t.me/crisp_ai)
-
----
-
 ## Фичи
 
 - Основан на произвоительном Rust и фреймворке Tauri 2
@@ -83,10 +58,6 @@ Clash Meta GUI базируется на <a href="https://github.com/tauri-apps/
 ### FAQ
 
 Смотрите [Страница часто задаваемых вопросов](https://clash-verge-rev.github.io/faq/windows.html)
-
-### Донат
-
-[Поддержите развитие Clash Verge Rev](https://github.com/sponsors/clash-verge-rev)
 
 ## Разработка
 

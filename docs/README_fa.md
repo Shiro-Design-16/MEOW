@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="../src-tauri/icons/icon.png" alt="Clash" width="128" />
+  <img src="../src-tauri/icons/icon.png" alt="MEOW" width="128" />
   <br>
-  Continuation of <a href="https://github.com/zzzgydi/clash-verge">Clash Verge</a>
+  MEOW — independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-rev">Clash Verge Rev</a>, currently in its initial brand redesign phase
   <br>
 </h1>
 
@@ -19,6 +19,9 @@
   <a href="./README_ko.md">한국어</a> ·
   <a href="./README_fa.md">فارسی</a>
 </p>
+
+> [!IMPORTANT]
+> MEOW is an unofficial independent fork of Clash Verge Rev. Its current initialization phase is limited to brand presentation, while independent features may be added later. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
 ## پیش‌نمایش
 
@@ -42,37 +45,6 @@
 
 برای مراحل نصب، عیب‌یابی و سوالات متداول، [مستندات پروژه](https://clash-verge-rev.github.io/) را مطالعه کنید.
 
-### کانال تلگرام
-
-برای اطلاع از آخرین اخبار به [@clash_verge_rev](https://t.me/clash_verge_re) بپیوندید.
-
----
-
-## تبلیغات
-
-#### [Doggygo VPN — شتاب‌دهنده جهانی عملکردگرا](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-- سرویس شبکه برون مرزی با عملکرد بالا به همراه دوره‌های آزمایشی رایگان، طرح‌های تخفیف‌دار، امکان باز کردن قفل استریم و پشتیبانی درجه یک از پروتکل هیستریا.
-- از طریق لینک اختصاصی Clash Verge ثبت نام کنید تا یک دوره آزمایشی ۳ روزه با ۱ گیگابایت ترافیک در روز دریافت کنید: [ثبت نام](https://verge.dginv.click/#/register?code=oaxsAGo6)
-- کوپن تخفیف ۲۰٪ ویژه کاربران Clash Verge: `verge20` (محدود به ۵۰۰ بار استفاده)
-- بسته تخفیف‌دار از ۱۵.۸ ین در ماه برای ۱۶۰ گیگابایت، به علاوه ۲۰٪ تخفیف اضافی برای صورتحساب سالانه
-- توسط یک تیم خارجی با خدمات قابل اعتماد و تا 50٪ سهم درآمد اداره می‌شود
-- کلاسترهای متعادل بار با مسیرهای اختصاصی پرسرعت (سازگار با کلاینت‌های قدیمی)، تأخیر فوق‌العاده کم، پخش روان 4K
-- اولین ارائه‌دهنده جهانی با **پروتکل QUIC**، اکنون با پروتکل‌های سریع‌تر خانواده QUIC (بهترین ترکیب با کلاینت Clash Verge)
-- پشتیبانی از سرویس‌های استریم و دسترسی به ChatGPT
-- وبسایت رسمی: [https://狗狗加速.com](https://verge.dginv.click/#/register?code=oaxsAGo6)
-
-### 🤖 [GPTKefu — پلتفرم خدمات مشتری هوشمند مبتنی بر هوش مصنوعی با ادغام عمیق Crisp](https://gptkefu.com)
-
-- 🧠 درک عمیق زمینه کامل مکالمه + تشخیص تصویر، ارائه خودکار پاسخ‌های حرفه‌ای و دقیق — بدون پاسخ‌های رباتیک.
-- ♾️ **بدون محدودیت در تعداد پاسخ‌ها**، بدون نگرانی از سهمیه — بر خلاف سایر محصولات خدمات مشتری AI که بر اساس هر پیام هزینه دریافت می‌کنند.
-- 💬 مشاوره پیش از فروش، پشتیبانی پس از فروش، پاسخ به سوالات پیچیده — پوشش تمام سناریوها با سهولت، با نمونه‌های واقعی تأیید شده.
-- ⚡ راه‌اندازی در ۳ دقیقه، بدون نیاز به آموزش — افزایش فوری بهره‌وری خدمات مشتری و رضایت مشتریان.
-- 🎁 ۱۴ روز آزمایش رایگان پلن پریمیوم — اول امتحان کنید، بعد پرداخت کنید: 👉 [شروع آزمایش رایگان](https://gptkefu.com)
-- 📢 کانال تلگرام خدمات مشتری هوشمند: [@crisp_ai](https://t.me/crisp_ai)
-
----
-
 ## ویژگی‌ها
 
 - ساخته شده بر اساس Rust با کارایی بالا و فریم‌ورک Tauri 2
@@ -86,10 +58,6 @@
 ### سوالات متداول
 
 برای راهنمایی‌های مربوط به هر پلتفرم، به [صفحه سوالات متداول](https://clash-verge-rev.github.io/faq/windows.html) مراجعه کنید.
-
-### اهدا
-
-[پشتیبانی از توسعه Clash Verge Rev](https://github.com/sponsors/clash-verge-rev)
 
 ## توسعه
 

@@ -52,7 +52,7 @@ body:
   - type: input
     id: verge-version
     attributes:
-      label: 软件版本 / CVR Version
-      description: 请提供你使用的 CVR 具体版本 / Please provide the specific version of CVR you are using
+      label: 软件版本 / MEOW Version
+      description: 请提供你使用的 MEOW 具体版本或提交编号 / Please provide the specific MEOW version or commit hash you are using
     validations:
       required: true
