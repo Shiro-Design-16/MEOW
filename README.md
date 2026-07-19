@@ -33,9 +33,9 @@
 
 ## 安装
 
-MEOW 的安装包将在 [Releases](https://github.com/Shiro-Design-16/MEOW/releases) 页面发布。支持的平台与上游保持一致：Windows（x64/x86）、Linux（x64/arm64）和 macOS 11+（Intel/Apple Silicon）。
+MEOW 0.0.1 将作为首个源码版本发布在 [Releases](https://github.com/Shiro-Design-16/MEOW/releases) 页面，Git 标签为 `MEOW-0.0.1`。
 
-在 MEOW 首个正式版本发布前，请从源码构建，或继续使用 [Clash Verge Rev 官方版本](https://github.com/clash-verge-rev/clash-verge-rev/releases)。
+该版本暂不提供安装包。Windows、macOS 和 Linux 安装包将在 MEOW 完成独立应用标识、更新签名和构建流程后提供。在此之前，请从源码构建，或继续使用 [Clash Verge Rev 官方版本](https://github.com/clash-verge-rev/clash-verge-rev/releases)。
 
 ## 功能
 

@@ -5,7 +5,7 @@
  *   pnpm release-version <version>
  *
  * <version> can be:
- *   - A full semver version (e.g., 1.2.3, v1.2.3, 1.2.3-beta, v1.2.3+build)
+ *   - A full semver version (e.g., 1.2.3, MEOW-1.2.3, 1.2.3-beta)
  *   - A tag: "alpha", "beta", "rc", "autobuild", "autobuild-latest", or "deploytest"
  *     - "alpha", "beta", "rc": Appends the tag to the current base version (e.g., 1.2.3-beta)
  *     - "autobuild": Appends a timestamped autobuild tag (e.g., 1.2.3+autobuild.2406101530)
@@ -14,7 +14,7 @@
  *
  * Examples:
  *   pnpm release-version 1.2.3
- *   pnpm release-version v1.2.3-beta
+ *   pnpm release-version MEOW-1.2.3
  *   pnpm release-version beta
  *   pnpm release-version autobuild
  *   pnpm release-version autobuild-latest
@@ -29,9 +29,9 @@
  * Errors are logged and the process exits with code 1 on failure.
  */
 
-import { execSync } from 'child_process'
-import fs from 'fs/promises'
-import path from 'path'
+import { execSync } from 'node:child_process'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 import { program } from 'commander'
 
@@ -108,18 +108,18 @@ function generateShortTimestamp(withCommit = false, useTauriCommit = false) {
  * @returns {boolean}
  */
 function isValidVersion(version) {
-  return /^v?\d+\.\d+\.\d+(-(alpha|beta|rc)(\.\d+)?)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$/i.test(
+  return /^(?:v|MEOW-)?\d+\.\d+\.\d+(-(alpha|beta|rc)(\.\d+)?)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$/i.test(
     version,
   )
 }
 
 /**
- * 标准化版本号
+ * 移除用于 Git 标签的前缀，得到应用内部 semver 版本号
  * @param {string} version
  * @returns {string}
  */
 function normalizeVersion(version) {
-  return version.startsWith('v') ? version : `v${version}`
+  return version.replace(/^(?:v|MEOW-)/i, '')
 }
 
 /**
@@ -148,9 +148,7 @@ async function updatePackageVersion(newVersion) {
       '[INFO]: Current package.json version is: ',
       packageJson.version,
     )
-    packageJson.version = newVersion.startsWith('v')
-      ? newVersion.slice(1)
-      : newVersion
+    packageJson.version = normalizeVersion(newVersion)
     await fs.writeFile(
       packageJsonPath,
       JSON.stringify(packageJson, null, 2),
@@ -175,9 +173,7 @@ async function updateCargoVersion(newVersion) {
   try {
     const data = await fs.readFile(cargoTomlPath, 'utf8')
     const lines = data.split('\n')
-    const versionWithoutV = newVersion.startsWith('v')
-      ? newVersion.slice(1)
-      : newVersion
+    const versionWithoutV = normalizeVersion(newVersion)
 
     const updatedLines = lines.map((line) => {
       if (line.trim().startsWith('version =')) {
@@ -207,9 +203,7 @@ async function updateTauriConfigVersion(newVersion) {
   try {
     const data = await fs.readFile(tauriConfigPath, 'utf8')
     const tauriConfig = JSON.parse(data)
-    const versionWithoutV = newVersion.startsWith('v')
-      ? newVersion.slice(1)
-      : newVersion
+    const versionWithoutV = normalizeVersion(newVersion)
 
     console.log(
       '[INFO]: Current tauri.conf.json version is: ',

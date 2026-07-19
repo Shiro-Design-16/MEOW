@@ -33,9 +33,9 @@ An independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-r
 
 ## Install
 
-MEOW installers will be published on the [Releases page](https://github.com/Shiro-Design-16/MEOW/releases). Supported platforms remain aligned with upstream: Windows (x64/x86), Linux (x64/arm64), and macOS 11+ (Intel/Apple Silicon).
+MEOW 0.0.1 will be published as the first source release on the [Releases page](https://github.com/Shiro-Design-16/MEOW/releases), using the Git tag `MEOW-0.0.1`.
 
-Before the first MEOW release, build from source or continue using an [official Clash Verge Rev release](https://github.com/clash-verge-rev/clash-verge-rev/releases).
+This release does not include installers. Windows, macOS, and Linux installers will be provided after MEOW has its own application identity, update signing keys, and verified build pipeline. Until then, build from source or continue using an [official Clash Verge Rev release](https://github.com/clash-verge-rev/clash-verge-rev/releases).
 
 ## Features
 

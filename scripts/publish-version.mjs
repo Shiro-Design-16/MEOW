@@ -1,7 +1,7 @@
 // scripts/publish-version.mjs
-import { execFileSync, spawn } from 'child_process'
-import { existsSync, readFileSync } from 'fs'
-import path from 'path'
+import { execFileSync, spawn } from 'node:child_process'
+import { existsSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 
 const rootDir = process.cwd()
 const scriptPath = path.join(rootDir, 'scripts', 'release-version.mjs')
@@ -29,13 +29,14 @@ const runRelease = () =>
 
 // 2. 判断是否需要打 tag
 function isSemver(version) {
-  return /^v?\d+\.\d+\.\d+(-(alpha|beta|rc)(\.\d+)?)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$/i.test(
+  return /^(?:v|MEOW-)?\d+\.\d+\.\d+(-(alpha|beta|rc)(\.\d+)?)?(\+[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)?$/i.test(
     version,
   )
 }
 
 function normalizeVersion(version) {
-  return version.startsWith('v') ? version : `v${version}`
+  const semanticVersion = version.replace(/^(?:v|MEOW-)/i, '')
+  return `MEOW-${semanticVersion}`
 }
 
 function readPackageVersion() {
@@ -60,7 +61,7 @@ async function run() {
     // 读取 release-version.mjs 写入后的版本
     tag = normalizeVersion(readPackageVersion())
   } else if (isSemver(versionArg)) {
-    // 1.2.3、v1.2.3、1.2.3-beta.1 或 1.2.3+build.1
+    // 1.2.3、MEOW-1.2.3、1.2.3-beta.1 或 1.2.3+build.1
     tag = normalizeVersion(versionArg)
   }
 
