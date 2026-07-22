@@ -4,7 +4,8 @@
       "updateAll": "Actualizar todas las suscripciones",
       "viewRuntimeConfig": "Ver configuración en tiempo de ejecución",
       "reactivate": "Reactivar suscripciones",
-      "import": "Importar"
+      "import": "Importar",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Suscripción cambiada",
         "profileReactivated": "Suscripción reactivada",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Selected profiles deleted successfully"
       },
       "notices": {

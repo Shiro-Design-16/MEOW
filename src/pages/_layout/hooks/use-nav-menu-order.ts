@@ -38,9 +38,17 @@ const resolveMenuOrder = <T extends { path: string }>(
     }
   }
 
-  for (const path of defaultOrder) {
+  for (const [defaultIndex, path] of defaultOrder.entries()) {
     if (!seen.has(path)) {
-      resolved.push(path)
+      const laterDefaultPaths = new Set(defaultOrder.slice(defaultIndex + 1))
+      const insertionIndex = resolved.findIndex((item) =>
+        laterDefaultPaths.has(item),
+      )
+      if (insertionIndex === -1) {
+        resolved.push(path)
+      } else {
+        resolved.splice(insertionIndex, 0, path)
+      }
       seen.add(path)
     }
   }

@@ -6,10 +6,12 @@ type ThemeValue = IVergeConfig['theme_mode']
 interface Props {
   value?: ThemeValue
   onChange?: (value: ThemeValue) => void
+  disabled?: boolean
+  translationPrefix: string
 }
 
 export const ThemeModeSwitch = (props: Props) => {
-  const { value, onChange } = props
+  const { value, onChange, disabled = false, translationPrefix } = props
   const { t } = useTranslation()
 
   const modes = ['light', 'dark', 'system'] as const
@@ -21,9 +23,10 @@ export const ThemeModeSwitch = (props: Props) => {
           key={mode}
           variant={mode === value ? 'contained' : 'outlined'}
           onClick={() => onChange?.(mode)}
+          disabled={disabled}
           sx={{ textTransform: 'capitalize' }}
         >
-          {t(`settings.sections.appearance.${mode}`)}
+          {t(`${translationPrefix}.${mode}` as any)}
         </Button>
       ))}
     </ButtonGroup>

@@ -85,28 +85,9 @@ pub fn app_profiles_dir() -> Result<PathBuf> {
     Ok(app_home_dir()?.join("profiles"))
 }
 
-/// icons dir
-pub fn app_icons_dir() -> Result<PathBuf> {
-    Ok(app_home_dir()?.join("icons"))
-}
-
-pub fn find_target_icons(target: &str) -> Result<Option<String>> {
-    let icons_dir = app_icons_dir()?;
-    let icon_path = fs::read_dir(&icons_dir)?
-        .filter_map(|entry| entry.ok().map(|e| e.path()))
-        .find(|path| {
-            let prefix_matches = path
-                .file_prefix()
-                .and_then(|p| p.to_str())
-                .is_some_and(|prefix| prefix.starts_with(target));
-            let ext_matches = path
-                .extension()
-                .and_then(|e| e.to_str())
-                .is_some_and(|ext| ext.eq_ignore_ascii_case("ico") || ext.eq_ignore_ascii_case("png"));
-            prefix_matches && ext_matches
-        });
-
-    icon_path.map(|path| path_to_str(&path).map(|s| s.into())).transpose()
+/// User-managed rule source files.
+pub fn app_rule_sources_dir() -> Result<PathBuf> {
+    Ok(app_home_dir()?.join("rule-sources"))
 }
 
 /// logs dir

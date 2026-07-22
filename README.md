@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./src-tauri/icons/icon.png" alt="MEOW" width="128" />
+  <img src="./resources/icon.svg" alt="MEOW" width="128" />
   <br>
   MEOW
   <br>

@@ -23,10 +23,12 @@ import {
   LocalFireDepartmentRounded,
   RefreshRounded,
   TextSnippetOutlined,
+  UploadFileRounded,
 } from '@mui/icons-material'
-import { Box, Button, Divider, Grid, IconButton, Stack } from '@mui/material'
+import { Box, Button, Grid, IconButton, Stack } from '@mui/material'
 import { listen, TauriEvent } from '@tauri-apps/api/event'
 import { readText } from '@tauri-apps/plugin-clipboard-manager'
+import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import { useLockFn } from 'ahooks'
 import { throttle } from 'lodash-es'
@@ -40,7 +42,6 @@ import {
   BaseStyledTextField,
   type DialogRef,
 } from '@/components/base'
-import { ProfileMore } from '@/components/profile/profile-more'
 import {
   ProfileViewer,
   type ProfileViewerRef,
@@ -66,16 +67,28 @@ import {
   revalidateQueries,
   useQuery,
 } from '@/services/query-client'
-import {
-  useLoadingCache,
-  useSetLoadingCache,
-  useThemeMode,
-} from '@/services/states'
+import { useLoadingCache, useSetLoadingCache } from '@/services/states'
 import { debugLog } from '@/utils/debug'
 
 // 与 src-tauri/src/main.rs 的 worker_limit 上限(8)保持一致，避免前后端更新风暴不对齐
 const PROFILE_UPDATE_WORKER_LIMIT = 8
 const PROFILE_SWITCH_LOADING_DELAY = 400
+
+const isYamlFile = (file: string) => /\.ya?ml$/iu.test(file)
+
+const createLocalProfile = async (file: string) => {
+  const item = {
+    type: 'local',
+    name: file.split(/\/|\\/u).pop() ?? 'New Profile',
+    desc: '',
+    url: '',
+    option: {
+      with_proxy: false,
+      self_proxy: false,
+    },
+  } as IProfileItem
+  await createProfile(item, await readTextFile(file))
+}
 
 // Equivalent to rectSortingStrategy without copying the full rect array for every item.
 const profileRectSortingStrategy: SortingStrategy = ({
@@ -190,22 +203,11 @@ const ProfilePage = () => {
           const paths = event.payload.paths
 
           for (const file of paths) {
-            if (!file.endsWith('.yaml') && !file.endsWith('.yml')) {
+            if (!isYamlFile(file)) {
               showNotice.error('profiles.page.feedback.errors.onlyYaml')
               continue
             }
-            const item = {
-              type: 'local',
-              name: file.split(/\/|\\/).pop() ?? 'New Profile',
-              desc: '',
-              url: '',
-              option: {
-                with_proxy: false,
-                self_proxy: false,
-              },
-            } as IProfileItem
-            const data = await readTextFile(file)
-            await createProfile(item, data)
+            await createLocalProfile(file)
             await mutateProfiles()
           }
           await enhanceProfiles()
@@ -251,7 +253,7 @@ const ProfilePage = () => {
     }
   })
 
-  const { data: chainLogs = {}, refetch: refetchLogs } = useQuery({
+  const { refetch: refetchLogs } = useQuery({
     queryKey: ['getRuntimeLogs'],
     queryFn: getRuntimeLogs,
   })
@@ -323,6 +325,33 @@ const ProfilePage = () => {
       setLoading(false)
     }
   }
+
+  const onImportFile = useLockFn(async () => {
+    const selected = await openDialog({
+      directory: false,
+      multiple: true,
+      filters: [{ name: 'YAML', extensions: ['yaml', 'yml'] }],
+    })
+    const files = typeof selected === 'string' ? [selected] : (selected ?? [])
+    if (files.length === 0) return
+
+    setLoading(true)
+    try {
+      for (const file of files) {
+        if (!isYamlFile(file)) {
+          throw new Error(t('profiles.page.feedback.errors.onlyYaml'))
+        }
+        await createLocalProfile(file)
+      }
+      await mutateProfiles()
+      await enhanceProfiles()
+      showNotice.success('profiles.page.feedback.notifications.fileImported')
+    } catch (error) {
+      showNotice.error(error)
+    } finally {
+      setLoading(false)
+    }
+  })
 
   // 强化的刷新策略
   // maxRetries 设为 1：useProfiles 内部 useQuery 已配置 retry:3，业务层只需 1 次额外重试
@@ -764,12 +793,6 @@ const ProfilePage = () => {
     }
   })
 
-  const mode = useThemeMode()
-  const isLight = mode === 'light'
-  const dividercolor = isLight
-    ? 'rgba(0, 0, 0, 0.06)'
-    : 'rgba(255, 255, 255, 0.06)'
-
   // 卸载后不再执行尚未发送的切换意图。
   useEffect(() => {
     profilePageMountedRef.current = true
@@ -959,6 +982,16 @@ const ProfilePage = () => {
           {t('profiles.page.actions.import')}
         </Button>
         <Button
+          variant="outlined"
+          size="small"
+          startIcon={<UploadFileRounded />}
+          disabled={loading}
+          sx={{ borderRadius: '6px', whiteSpace: 'nowrap' }}
+          onClick={() => void onImportFile()}
+        >
+          {t('profiles.page.actions.importFile')}
+        </Button>
+        <Button
           variant="contained"
           size="small"
           sx={{ borderRadius: '6px' }}
@@ -1029,36 +1062,6 @@ const ProfilePage = () => {
                   </Grid>
                 ))}
               </SortableContext>
-            </Grid>
-          </Box>
-          <Divider
-            variant="middle"
-            flexItem
-            sx={{ width: `calc(100% - 32px)`, borderColor: dividercolor }}
-          ></Divider>
-          <Box sx={{ mt: 1.5, mb: '10px' }}>
-            <Grid container spacing={{ xs: 1, lg: 1 }}>
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }}>
-                <ProfileMore
-                  id="Merge"
-                  onSave={async (prev, curr) => {
-                    if (prev !== curr) {
-                      await onEnhance(false)
-                    }
-                  }}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }}>
-                <ProfileMore
-                  id="Script"
-                  logInfo={chainLogs['Script']}
-                  onSave={async (prev, curr) => {
-                    if (prev !== curr) {
-                      await onEnhance(false)
-                    }
-                  }}
-                />
-              </Grid>
             </Grid>
           </Box>
         </Box>

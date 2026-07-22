@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="../src-tauri/icons/icon.png" alt="MEOW" width="128" />
+  <img src="../resources/icon.svg" alt="MEOW" width="128" />
   <br>
   MEOW — independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-rev">Clash Verge Rev</a>, currently in its initial brand redesign phase
   <br>

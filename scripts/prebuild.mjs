@@ -458,6 +458,21 @@ async function resolveSidecar(binInfo) {
   }
 }
 
+async function resolveSidecarOfflineFirst(name, loadVersion, createInfo) {
+  const extension = platform === 'win32' ? '.exe' : ''
+  const targetPath = path.join(
+    SIDECAR_DIR,
+    `${name}-${SIDECAR_HOST}${extension}`,
+  )
+  if (!FORCE && fs.existsSync(targetPath)) {
+    log_success(`"${name}" already exists, skipping version check`)
+    return
+  }
+
+  await loadVersion()
+  await resolveSidecar(createInfo())
+}
+
 async function resolveResource(binInfo) {
   const { file, downloadURL, localPath, dir } = binInfo
   const baseDir = dir ?? RESOURCES_DIR
@@ -754,13 +769,21 @@ const tasks = [
   {
     name: 'verge-mihomo-alpha',
     func: () =>
-      getLatestAlphaVersion().then(() => resolveSidecar(clashMetaAlpha())),
+      resolveSidecarOfflineFirst(
+        'verge-mihomo-alpha',
+        getLatestAlphaVersion,
+        clashMetaAlpha,
+      ),
     retry: 5,
   },
   {
     name: 'verge-mihomo',
     func: () =>
-      getLatestReleaseVersion().then(() => resolveSidecar(clashMeta())),
+      resolveSidecarOfflineFirst(
+        'verge-mihomo',
+        getLatestReleaseVersion,
+        clashMeta,
+      ),
     retry: 5,
   },
   { name: 'plugin', func: resolvePlugin, retry: 5, winOnly: true },

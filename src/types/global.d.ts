@@ -282,6 +282,13 @@ interface IProfileOption {
   groups?: string
 }
 
+interface IRuleSource {
+  uid: string
+  name: string
+  file: string
+  enabled: boolean
+}
+
 interface IProfilesConfig {
   current?: string
   items?: IProfileItem[]
@@ -894,25 +901,23 @@ interface IVergeConfig {
   start_page?: string
   clash_core?: string
   theme_mode?: 'light' | 'dark' | 'system'
+  active_theme?: string
+  prefer_system_titlebar?: boolean
   traffic_graph?: boolean
   enable_memory_usage?: boolean
   enable_group_icon?: boolean
   pause_render_traffic_stats_on_blur?: boolean
-  menu_icon?: 'monochrome' | 'colorful' | 'disable'
   menu_order?: string[]
   notice_position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
   collapse_navbar?: boolean
-  tray_icon?: 'monochrome' | 'colorful'
-  common_tray_icon?: boolean
-  sysproxy_tray_icon?: boolean
-  tun_tray_icon?: boolean
   enable_tray_speed?: boolean
-  // enable_tray_icon?: boolean;
   tray_proxy_groups_display_mode?: 'default' | 'inline' | 'disable'
   tray_inline_outbound_modes?: boolean
   enable_tun_mode?: boolean
   enable_app_routing?: boolean
   app_routing_rules?: IAppRoutingRule[]
+  rule_sources?: IRuleSource[]
+  rule_source_order?: string[]
   enable_auto_light_weight_mode?: boolean
   auto_light_weight_minutes?: number
   enable_auto_launch?: boolean
@@ -940,21 +945,6 @@ interface IVergeConfig {
   system_proxy_bypass?: string
   web_ui_list?: string[]
   hotkeys?: string[]
-  theme_setting?: {
-    primary_color?: string
-    secondary_color?: string
-    primary_text?: string
-    secondary_text?: string
-    info_color?: string
-    error_color?: string
-    warning_color?: string
-    success_color?: string
-    font_family?: string
-    css_injection?: string
-    background_image?: string
-    background_blend_mode?: string
-    background_opacity?: number
-  }
   auto_close_connection?: boolean
   auto_check_update?: boolean
   default_latency_test?: string

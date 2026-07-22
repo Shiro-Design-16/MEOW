@@ -35,6 +35,7 @@
       "!src-tauri/target",
       "!src-tauri/gen",
       "!target",
+      "!resources/application/app-icon-mac.icon/**",
       "!Cargo.lock",
       "!pnpm-lock.yaml",
       "!README.md",

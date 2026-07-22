@@ -53,6 +53,7 @@ jobs:
       - name: Pnpm install and check
         run: |
           pnpm i
+          pnpm run resources:generate
           pnpm run prebuild ${{ matrix.target }}
 
       - name: Rust Cache

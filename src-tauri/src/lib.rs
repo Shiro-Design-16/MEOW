@@ -120,9 +120,11 @@ mod app_init {
     /// Setup window state management
     pub fn setup_window_state(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         logging!(info, Type::Setup, "初始化窗口状态管理...");
+        let state_flags =
+            tauri_plugin_window_state::StateFlags::default() & !tauri_plugin_window_state::StateFlags::DECORATIONS;
         let window_state_plugin = tauri_plugin_window_state::Builder::new()
             .with_filename(files::WINDOW_STATE)
-            .with_state_flags(tauri_plugin_window_state::StateFlags::default())
+            .with_state_flags(state_flags)
             .build();
         app.handle().plugin(window_state_plugin)?;
         Ok(())
@@ -145,6 +147,11 @@ mod app_init {
             cmd::get_network_interfaces,
             cmd::get_system_hostname,
             cmd::list_macos_applications,
+            cmd::create_rule_source,
+            cmd::import_rule_source,
+            cmd::read_rule_source_file,
+            cmd::save_rule_source_file,
+            cmd::delete_rule_source_file,
             cmd::restart_app,
             cmd::start_core,
             cmd::stop_core,
@@ -183,7 +190,6 @@ mod app_init {
             cmd::patch_verge_config,
             cmd::test_delay,
             cmd::get_app_dir,
-            cmd::copy_icon_file,
             cmd::download_icon_cache,
             cmd::open_devtools,
             cmd::exit_app,

@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "meow.default",
+  "name": "MEOW Default",
+  "version": "0.0.1",
+  "author": "MEOW Contributors",
+  "supportedModes": ["light", "dark"],
+  "assets": {
+    "brand": {
+      "icon": "icon.svg",
+      "logo": "logo.svg"
+    },
+    "tray": {
+      "idle": "tray/tray-idle.svg",
+      "systemProxy": "tray/tray-sys.svg",
+      "tun": "tray/tray-tun.svg"
+    },
+    "navigation": {
+      "home": "navigation/nav-home.svg",
+      "proxies": "navigation/nav-proxies.svg",
+      "profiles": "navigation/nav-profiles.svg",
+      "connections": "navigation/nav-connections.svg",
+      "rules": "navigation/nav-rules.svg",
+      "logs": "navigation/nav-logs.svg",
+      "tests": "navigation/nav-tests.svg",
+      "extensions": "navigation/nav-extensions.svg",
+      "settings": "navigation/nav-settings.svg"
+    },
+    "component": {
+      "matchCase": "component/com-match-case.svg",
+      "matchWholeWord": "component/com-match-whole-word.svg",
+      "useRegularExpression": "component/com-use-regular-expression.svg"
+    },
+    "misc": {
+      "testApple": "misc/test-apple.svg",
+      "testGithub": "misc/test-github.svg",
+      "testGoogle": "misc/test-google.svg",
+      "testYoutube": "misc/test-youtube.svg"
+    }
+  },
+  "preview": {
+    "icon": "previews/pre-icon.svg",
+    "images": {
+      "light": "previews/pre-light.png",
+      "dark": "previews/pre-dark.png"
+    },
+    "constraints": {
+      "aspectRatio": "16:9",
+      "resolutions": [[1280, 720], [1920, 1080]]
+    }
+  },
+  "typography": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, \"Microsoft YaHei UI\", \"Microsoft YaHei\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\""
+  },
+  "modes": {
+    "light": {
+      "palette": {
+        "primary": "#007AFF",
+        "secondary": "#FC9B76",
+        "info": "#007AFF",
+        "error": "#FF3B30",
+        "warning": "#FF9500",
+        "success": "#06943D",
+        "textPrimary": "#000000",
+        "textSecondary": "#3C3C4399",
+        "background": "#F5F5F5",
+        "dialogBackground": "#FFFFFF"
+      },
+      "chrome": {
+        "rootBackground": "#ECECEC",
+        "selection": "#F5F5F5",
+        "scroller": "#90939980",
+        "divider": "rgba(0, 0, 0, 0.06)",
+        "windowBorder": "#CCCCCC",
+        "scrollbarBackground": "#F1F1F1",
+        "scrollbarThumb": "#C1C1C1",
+        "scrollbarThumbHover": "#A1A1A1"
+      }
+    },
+    "dark": {
+      "palette": {
+        "primary": "#0A84FF",
+        "secondary": "#FF9F0A",
+        "info": "#0A84FF",
+        "error": "#FF453A",
+        "warning": "#FF9F0A",
+        "success": "#30D158",
+        "textPrimary": "#FFFFFF",
+        "textSecondary": "#EBEBF599",
+        "background": "#2E303D",
+        "dialogBackground": "#2E303D"
+      },
+      "chrome": {
+        "rootBackground": "#2E303D",
+        "selection": "#3E3E3E",
+        "scroller": "#555555",
+        "divider": "rgba(255, 255, 255, 0.06)",
+        "windowBorder": "#1E1E1E",
+        "scrollbarBackground": "#2E303D",
+        "scrollbarThumb": "#555555",
+        "scrollbarThumbHover": "#666666"
+      }
+    }
+  }
+}

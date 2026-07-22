@@ -27,21 +27,17 @@ interface SortableProps {
 interface Props {
   to: string
   children: string
-  icon: ReactNode[]
+  icon: ReactNode
   sortable?: SortableProps
   onPreload?: () => Promise<unknown>
 }
 export const LayoutItem = (props: Props) => {
   const { to, children, icon, sortable, onPreload } = props
   const { verge } = useVerge()
-  const { menu_icon } = verge ?? {}
   const navCollapsed = verge?.collapse_navbar ?? false
   const resolved = useResolvedPath(to)
   const match = useMatch({ path: resolved.pathname, end: true })
   const navigate = useNavigate()
-
-  const effectiveMenuIcon =
-    navCollapsed && menu_icon === 'disable' ? 'monochrome' : menu_icon
 
   const { setNodeRef, attributes, listeners, style, isDragging, disabled } =
     sortable ?? {}
@@ -110,26 +106,19 @@ export const LayoutItem = (props: Props) => {
         onPointerDown={handlePointerDown}
         onClick={() => navigate(to)}
       >
-        {(effectiveMenuIcon === 'monochrome' || !effectiveMenuIcon) && (
-          <ListItemIcon
-            sx={{
-              color: 'text.primary',
-              marginLeft: '6px',
-              cursor: draggable ? 'grab' : 'inherit',
-            }}
-          >
-            {icon[0]}
-          </ListItemIcon>
-        )}
-        {effectiveMenuIcon === 'colorful' && (
-          <ListItemIcon sx={{ cursor: draggable ? 'grab' : 'inherit' }}>
-            {icon[1]}
-          </ListItemIcon>
-        )}
+        <ListItemIcon
+          sx={{
+            color: 'text.primary',
+            marginLeft: '6px',
+            cursor: draggable ? 'grab' : 'inherit',
+          }}
+        >
+          {icon}
+        </ListItemIcon>
         <ListItemText
           sx={{
             textAlign: 'center',
-            marginLeft: effectiveMenuIcon === 'disable' ? '' : '-35px',
+            marginLeft: '-35px',
           }}
           primary={children}
         />

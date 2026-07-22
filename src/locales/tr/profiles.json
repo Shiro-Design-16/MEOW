@@ -4,7 +4,8 @@
       "updateAll": "Tüm Profilleri Güncelle",
       "viewRuntimeConfig": "Çalışma Zamanı Yapılandırmasını Görüntüle",
       "reactivate": "Profilleri Yeniden Etkinleştir",
-      "import": "İçe Aktar"
+      "import": "İçe Aktar",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Profil Değiştirildi",
         "profileReactivated": "Profil Yeniden Etkinleştirildi",
         "switchBusy": "Profil değiştirme işlemi zaten devam ediyor",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Seçili profiller başarıyla silindi"
       },
       "notices": {

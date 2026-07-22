@@ -34,7 +34,6 @@ import { useTranslation } from 'react-i18next'
 import { BaseDialog } from '@/components/base'
 import { EditorViewer } from '@/components/profile/editor-viewer'
 import { GroupsEditorViewer } from '@/components/profile/groups-editor-viewer'
-import { RulesEditorViewer } from '@/components/profile/rules-editor-viewer'
 import { useEditorDocument } from '@/hooks/use-editor-document'
 import {
   getNextUpdateTime,
@@ -297,7 +296,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
   }, [forceRefresh, hasUrl, updated])
 
   const [fileOpen, setFileOpen] = useState(false)
-  const [rulesOpen, setRulesOpen] = useState(false)
   const [proxiesOpen, setProxiesOpen] = useState(false)
   const [groupsOpen, setGroupsOpen] = useState(false)
   const [mergeOpen, setMergeOpen] = useState(false)
@@ -346,11 +344,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
   const onEditFile = () => {
     setAnchorEl(null)
     setFileOpen(true)
-  }
-
-  const onEditRules = () => {
-    setAnchorEl(null)
-    setRulesOpen(true)
   }
 
   const onEditProxies = () => {
@@ -436,7 +429,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
     shareQrCode: 'profiles.components.menu.shareQrCode',
     editInfo: 'profiles.components.menu.editInfo',
     editFile: 'profiles.components.menu.editFile',
-    editRules: 'profiles.components.menu.editRules',
     editProxies: 'profiles.components.menu.editProxies',
     editGroups: 'profiles.components.menu.editGroups',
     extendConfig: 'profiles.components.menu.extendConfig',
@@ -476,11 +468,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
       label: menuLabels.editFile,
       handler: onEditFile,
       disabled: false,
-    },
-    {
-      label: menuLabels.editRules,
-      handler: onEditRules,
-      disabled: !option?.rules,
     },
     {
       label: menuLabels.editProxies,
@@ -548,11 +535,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
       label: menuLabels.editFile,
       handler: onEditFile,
       disabled: false,
-    },
-    {
-      label: menuLabels.editRules,
-      handler: onEditRules,
-      disabled: !option?.rules,
     },
     {
       label: menuLabels.editProxies,
@@ -896,17 +878,6 @@ const ProfileItemBase = (props: ProfileItemProps) => {
           onChange={profileDocument.setValue}
           onSave={handleSaveProfileDocument}
           onClose={() => setFileOpen(false)}
-        />
-      )}
-      {rulesOpen && (
-        <RulesEditorViewer
-          groupsUid={option?.groups ?? ''}
-          mergeUid={option?.merge ?? ''}
-          profileUid={uid}
-          property={option?.rules ?? ''}
-          open={true}
-          onSave={onSave}
-          onClose={() => setRulesOpen(false)}
         />
       )}
       {proxiesOpen && (

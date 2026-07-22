@@ -1,5 +1,6 @@
 import {
   AddRounded,
+  ArrowBackRounded,
   DeleteRounded,
   RefreshRounded,
   SaveRounded,
@@ -18,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useLockFn } from 'ahooks'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { BasePage, Switch } from '@/components/base'
@@ -45,7 +46,11 @@ const toRule = (app: IMacApplication, policy: string): IAppRoutingRule => ({
   enabled: true,
 })
 
-const AppRoutingPage = () => {
+interface Props {
+  onBack?: () => void
+}
+
+const AppRoutingPage = ({ onBack }: Props) => {
   const { t } = useTranslation()
   const { clash } = useClash()
   const { verge, patchVerge } = useVerge()
@@ -65,7 +70,7 @@ const AppRoutingPage = () => {
     [applications],
   )
 
-  const loadOptions = useLockFn(async () => {
+  const loadOptions = useCallback(async () => {
     setScanning(true)
     try {
       const [apps, proxyData] = await Promise.all([
@@ -82,7 +87,7 @@ const AppRoutingPage = () => {
     } finally {
       setScanning(false)
     }
-  })
+  }, [])
 
   useEffect(() => {
     void loadOptions()
@@ -137,6 +142,15 @@ const AppRoutingPage = () => {
       contentStyle={{ overflow: 'auto' }}
       header={
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {onBack && (
+            <Button
+              variant="text"
+              startIcon={<ArrowBackRounded />}
+              onClick={onBack}
+            >
+              {t('rules.page.actions.back')}
+            </Button>
+          )}
           <Button
             variant="outlined"
             startIcon={

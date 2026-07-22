@@ -4,7 +4,8 @@
       "updateAll": "모든 프로필 업데이트",
       "viewRuntimeConfig": "런타임 설정 보기",
       "reactivate": "프로필 재활성화",
-      "import": "가져오기"
+      "import": "가져오기",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "프로필 전환됨",
         "profileReactivated": "프로필 재활성화됨",
         "switchBusy": "프로필 전환이 이미 진행 중입니다",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "선택한 프로필이 삭제되었습니다"
       },
       "notices": {

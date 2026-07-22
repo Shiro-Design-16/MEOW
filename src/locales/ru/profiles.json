@@ -4,7 +4,8 @@
       "updateAll": "Обновить все профили",
       "viewRuntimeConfig": "Просмотреть текущую конфигурацию",
       "reactivate": "Перезапустить профиль",
-      "import": "Импортировать"
+      "import": "Импортировать",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Профиль переключён",
         "profileReactivated": "Профиль перезапущен",
         "switchBusy": "Переключение профиля уже выполняется",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Выбранные профили удалены"
       },
       "notices": {

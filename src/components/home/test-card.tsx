@@ -16,13 +16,13 @@ import { useEffect, useRef, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // test icons
-import apple from '@/assets/image/test/apple.svg?raw'
-import github from '@/assets/image/test/github.svg?raw'
-import google from '@/assets/image/test/google.svg?raw'
-import youtube from '@/assets/image/test/youtube.svg?raw'
 import { TestItem } from '@/components/test/test-item'
 import { TestViewer, TestViewerRef } from '@/components/test/test-viewer'
 import { useVerge } from '@/hooks/use-verge'
+import apple from '@root/resources/misc/test-apple.svg?raw'
+import github from '@root/resources/misc/test-github.svg?raw'
+import google from '@root/resources/misc/test-google.svg?raw'
+import youtube from '@root/resources/misc/test-youtube.svg?raw'
 
 import { EnhancedCard } from './enhanced-card'
 

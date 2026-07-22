@@ -9,8 +9,10 @@ pub mod service;
 pub mod sysopt;
 pub mod timer;
 pub mod tray;
+// Kept for a future MEOW update service, but intentionally disconnected for now.
+#[allow(dead_code)]
 pub mod updater;
 pub mod validate;
 pub mod win_uwp;
 
-pub use self::{manager::CoreManager, timer::Timer, updater::SilentUpdater};
+pub use self::{manager::CoreManager, timer::Timer};

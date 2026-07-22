@@ -4,7 +4,8 @@
       "updateAll": "Update All Profiles",
       "viewRuntimeConfig": "View Runtime Config",
       "reactivate": "Reactivate Profiles",
-      "import": "Import"
+      "import": "Import",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Profile Switched",
         "profileReactivated": "Profile Reactivated",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Selected profiles deleted successfully"
       },
       "notices": {

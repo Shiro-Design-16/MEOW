@@ -13,9 +13,9 @@ export const navigationItems = {
     path: '/connections',
   },
   rules: { label: 'layout.components.navigation.tabs.rules', path: '/rules' },
-  appRouting: {
-    label: 'layout.components.navigation.tabs.appRouting',
-    path: '/app-routing',
+  extensions: {
+    label: 'layout.components.navigation.tabs.extensions',
+    path: '/extensions',
   },
   logs: { label: 'layout.components.navigation.tabs.logs', path: '/logs' },
   unlock: {

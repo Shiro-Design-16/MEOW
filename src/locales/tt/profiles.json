@@ -4,7 +4,8 @@
       "updateAll": "Барлык профильләрне яңарту",
       "viewRuntimeConfig": "Кулланылган конфигурацияне карау",
       "reactivate": "Профильләрне янәдән активлаштыру",
-      "import": "Импорт"
+      "import": "Импорт",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Профиль алмаштырылды",
         "profileReactivated": "Профиль яңадан активлаштырылды",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Selected profiles deleted successfully"
       },
       "notices": {

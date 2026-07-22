@@ -12,10 +12,10 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import matchCaseIcon from '@/assets/image/component/match_case.svg?react'
-import matchWholeWordIcon from '@/assets/image/component/match_whole_word.svg?react'
-import UseRegularExpressionIcon from '@/assets/image/component/use_regular_expression.svg?react'
 import { buildRegex, compileStringMatcher } from '@/utils/search-matcher'
+import matchCaseIcon from '@root/resources/component/com-match-case.svg?react'
+import matchWholeWordIcon from '@root/resources/component/com-match-whole-word.svg?react'
+import UseRegularExpressionIcon from '@root/resources/component/com-use-regular-expression.svg?react'
 
 export type SearchState = {
   text: string

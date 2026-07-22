@@ -4,7 +4,8 @@
       "updateAll": "すべてのプロファイルを更新",
       "viewRuntimeConfig": "実行時のプロファイルを表示",
       "reactivate": "プロファイルを再アクティブ化",
-      "import": "インポート"
+      "import": "インポート",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "プロファイルが切り替えられました。",
         "profileReactivated": "プロファイルが再アクティブ化されました。",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "選択したプロファイルが正常に削除されました"
       },
       "notices": {

@@ -1,5 +1,61 @@
 {
   "page": {
+    "actions": {
+      "back": "Back"
+    },
+    "tabs": {
+      "sources": "Rule Sources",
+      "preview": "Effective Rules"
+    },
+    "preview": {
+      "description": "This is the compiled runtime result. Use it for verification and diagnostics rather than daily editing."
+    },
+    "appRouting": {
+      "title": "Application Routing",
+      "highest": "Highest Priority",
+      "description": "{{count}} application routes. Enabled routes are inserted before every other rule source in TUN mode.",
+      "configure": "Configure"
+    },
+    "sources": {
+      "title": "Rule Sources",
+      "description": "Drag sources to set first-match priority. The active subscription stays enabled but can be reordered.",
+      "ruleCount": "{{count}} rules",
+      "active": {
+        "locked": "Active Subscription",
+        "noSubscription": "No active subscription"
+      },
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "invalid": "Invalid YAML"
+      },
+      "actions": {
+        "open": "Open rule source",
+        "editOverride": "Edit subscription rule override",
+        "import": "Import YAML",
+        "create": "New Source"
+      },
+      "messages": {
+        "imported": "Rule source imported",
+        "created": "Rule source created",
+        "confirmDelete": "Delete rule source “{{name}}”?",
+        "deleted": "Rule source deleted",
+        "saved": "Rule source saved"
+      },
+      "create": {
+        "title": "Create Rule Source",
+        "name": "Source name"
+      },
+      "editor": {
+        "visual": "Visual",
+        "empty": "This source has no inline rules yet.",
+        "addRule": "Add Rule"
+      }
+    },
+    "legacy": {
+      "title": "Advanced Compatibility",
+      "description": "Existing global YAML overrides and scripts remain available during the transition. They can modify the entire configuration and are not limited to rules."
+    },
     "provider": {
       "trigger": "ルールプロバイダー",
       "dialogTitle": "ルールプロバイダー",
@@ -9,6 +65,46 @@
       }
     },
     "title": "ルール"
+  },
+  "extensions": {
+    "title": "Extensions",
+    "theme": {
+      "title": "Theme",
+      "description": "Theme packages define the interface colors, typography and graphic assets.",
+      "package": "Theme package",
+      "manage": "Manage themes",
+      "mode": "Appearance",
+      "modeUnavailable": "This theme does not provide both light and dark modes.",
+      "modes": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "manager": {
+        "title": "Theme Manager",
+        "description": "Browse installed themes, compare their appearance and choose the active package.",
+        "import": "Import theme",
+        "importDialogTitle": "Choose a theme package directory",
+        "imported": "Theme package imported",
+        "removed": "Theme package removed",
+        "confirmRemove": "Remove theme “{{name}}”?",
+        "preview": "Theme preview",
+        "previewLight": "Light theme preview",
+        "previewDark": "Dark theme preview",
+        "active": "Active",
+        "builtIn": "Built in",
+        "local": "Local import",
+        "remove": "Remove theme",
+        "apply": "Apply",
+        "applied": "Applied",
+        "onlineTitle": "Online themes",
+        "onlineDescription": "The download interface is reserved for a future MEOW theme catalog."
+      }
+    },
+    "empty": {
+      "title": "No extensions installed",
+      "description": "This area is reserved for installable MEOW extensions with independent permissions and configuration."
+    }
   },
   "feedback": {
     "notifications": {

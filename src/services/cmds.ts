@@ -386,25 +386,6 @@ export async function getSystemInfo() {
   return invoke<SystemInfo>('get_system_info')
 }
 
-export async function copyIconFile(
-  path: string,
-  name: 'common' | 'sysproxy' | 'tun',
-) {
-  const key = `icon_${name}_update_time`
-  const previousTime = localStorage.getItem(key) || ''
-
-  const currentTime = String(Date.now())
-  localStorage.setItem(key, currentTime)
-
-  const iconInfo = {
-    name,
-    previous_t: previousTime,
-    current_t: currentTime,
-  }
-
-  return invoke<void>('copy_icon_file', { path, iconInfo })
-}
-
 export async function downloadIconCache(url: string, name: string) {
   return invoke<string>('download_icon_cache', { url, name })
 }
@@ -419,6 +400,26 @@ export async function getSystemHostname() {
 
 export async function listMacApplications() {
   return invoke<IMacApplication[]>('list_macos_applications')
+}
+
+export async function createRuleSource(name: string) {
+  return invoke<IRuleSource>('create_rule_source', { name })
+}
+
+export async function importRuleSource(path: string) {
+  return invoke<IRuleSource>('import_rule_source', { path })
+}
+
+export async function readRuleSourceFile(uid: string) {
+  return invoke<string>('read_rule_source_file', { uid })
+}
+
+export async function saveRuleSourceFile(uid: string, fileData: string) {
+  return invoke<void>('save_rule_source_file', { uid, fileData })
+}
+
+export async function deleteRuleSourceFile(uid: string) {
+  return invoke<void>('delete_rule_source_file', { uid })
 }
 
 export async function getNetworkInterfacesInfo() {

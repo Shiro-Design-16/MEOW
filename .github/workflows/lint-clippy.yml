@@ -31,6 +31,10 @@ jobs:
           filters: |
             rust:
               - 'src-tauri/**'
+              - 'resources/**'
+              - 'scripts/generate-resources.mjs'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
 
       - name: Skip if src-tauri not changed
         if: github.event_name != 'workflow_dispatch' && steps.check_changes.outputs.rust != 'true'
@@ -56,6 +60,21 @@ jobs:
 
       - name: Add Rust Target
         run: rustup target add ${{ matrix.target }}
+
+      - name: Install Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.18.0'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Generate build resources
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run resources:generate
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2

@@ -8,6 +8,8 @@ import { RouterProvider } from 'react-router'
 import { SWRConfig } from 'swr'
 import { MihomoWebSocket } from 'tauri-plugin-mihomo-api'
 
+import appIconUrl from '@root/resources/icon.svg?url'
+
 import { BaseErrorBoundary } from './components/base'
 import { router } from './pages/_routers'
 import { AppDataProvider } from './providers/app-data-provider'
@@ -25,6 +27,10 @@ import {
   UpdateStateProvider,
 } from './services/states'
 import { disableWebViewShortcuts } from './utils/disable-webview-shortcuts'
+
+document
+  .querySelector<HTMLLinkElement>('#app-favicon')
+  ?.setAttribute('href', appIconUrl)
 
 if (!window.ResizeObserver) {
   window.ResizeObserver = ResizeObserver

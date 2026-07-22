@@ -21,6 +21,15 @@ pub struct IAppRoutingRule {
     pub enabled: bool,
 }
 
+#[derive(Default, Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+pub struct IRuleSource {
+    pub uid: String,
+    pub name: String,
+    pub file: String,
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+}
+
 const fn default_true() -> bool {
     true
 }
@@ -43,6 +52,12 @@ pub struct IVerge {
 
     /// `light` or `dark` or `system`
     pub theme_mode: Option<String>,
+
+    /// selected theme package id
+    pub active_theme: Option<String>,
+
+    /// prefer the operating system title bar instead of MEOW's custom chrome
+    pub prefer_system_titlebar: Option<bool>,
 
     /// tray click event
     pub tray_event: Option<String>,
@@ -68,19 +83,6 @@ pub struct IVerge {
     /// pause render traffic stats on blur
     pub pause_render_traffic_stats_on_blur: Option<bool>,
 
-    /// common tray icon
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub common_tray_icon: Option<bool>,
-
-    /// tray icon
-    #[cfg(target_os = "macos")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tray_icon: Option<String>,
-
-    /// menu icon
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub menu_icon: Option<String>,
-
     /// menu order
     #[serde(skip_serializing_if = "Option::is_none")]
     pub menu_order: Option<Vec<String>>,
@@ -92,12 +94,6 @@ pub struct IVerge {
     /// collapse navigation bar
     pub collapse_navbar: Option<bool>,
 
-    /// sysproxy tray icon
-    pub sysproxy_tray_icon: Option<bool>,
-
-    /// tun tray icon
-    pub tun_tray_icon: Option<bool>,
-
     /// clash tun mode
     pub enable_tun_mode: Option<bool>,
 
@@ -106,6 +102,12 @@ pub struct IVerge {
 
     /// Managed process routing rules injected before subscription rules.
     pub app_routing_rules: Option<Vec<IAppRoutingRule>>,
+
+    /// User-managed YAML rule sources compiled around the active profile.
+    pub rule_sources: Option<Vec<IRuleSource>>,
+
+    /// Top-to-bottom rule source priority. The active profile uses a virtual UID.
+    pub rule_source_order: Option<Vec<String>>,
 
     /// can the app auto startup
     pub enable_auto_launch: Option<bool>,
@@ -142,9 +144,6 @@ pub struct IVerge {
 
     /// proxy host address
     pub proxy_host: Option<String>,
-
-    /// theme setting
-    pub theme_setting: Option<IVergeTheme>,
 
     /// web ui list
     pub web_ui_list: Option<Vec<String>>,
@@ -258,7 +257,6 @@ pub struct IVerge {
     #[cfg(target_os = "macos")]
     pub enable_tray_speed: Option<bool>,
 
-    // pub enable_tray_icon: Option<bool>,
     /// show proxy groups directly on tray root menu
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tray_proxy_groups_display_mode: Option<String>,
@@ -287,22 +285,6 @@ pub struct IVergeTestItem {
     pub name: Option<String>,
     pub icon: Option<String>,
     pub url: Option<String>,
-}
-
-#[derive(Default, Debug, Clone, Deserialize, Serialize)]
-pub struct IVergeTheme {
-    pub primary_color: Option<String>,
-    pub secondary_color: Option<String>,
-    pub primary_text: Option<String>,
-    pub secondary_text: Option<String>,
-
-    pub info_color: Option<String>,
-    pub error_color: Option<String>,
-    pub warning_color: Option<String>,
-    pub success_color: Option<String>,
-
-    pub font_family: Option<String>,
-    pub css_injection: Option<String>,
 }
 
 impl IVerge {
@@ -408,6 +390,8 @@ impl IVerge {
             clash_core: Some("verge-mihomo".into()),
             language: Some(clash_verge_i18n::system_language().into()),
             theme_mode: Some("system".into()),
+            active_theme: Some("meow.default".into()),
+            prefer_system_titlebar: Some(false),
             #[cfg(not(target_os = "windows"))]
             env_type: Some("bash".into()),
             #[cfg(target_os = "windows")]
@@ -417,16 +401,12 @@ impl IVerge {
             enable_memory_usage: Some(true),
             enable_group_icon: Some(true),
             pause_render_traffic_stats_on_blur: Some(true),
-            #[cfg(target_os = "macos")]
-            tray_icon: Some("monochrome".into()),
-            menu_icon: Some("monochrome".into()),
             notice_position: Some("top-right".into()),
             collapse_navbar: Some(false),
-            common_tray_icon: Some(false),
-            sysproxy_tray_icon: Some(false),
-            tun_tray_icon: Some(false),
             enable_app_routing: Some(false),
             app_routing_rules: Some(Vec::new()),
+            rule_sources: Some(Vec::new()),
+            rule_source_order: Some(vec!["__active_profile__".into()]),
             enable_auto_launch: Some(false),
             enable_silent_start: Some(false),
             enable_hover_jump_navigator: Some(true),
@@ -464,7 +444,6 @@ impl IVerge {
             webdav_password: None,
             #[cfg(target_os = "macos")]
             enable_tray_speed: Some(false),
-            // enable_tray_icon: Some(true),
             tray_proxy_groups_display_mode: Some("default".into()),
             tray_inline_outbound_modes: Some(false),
             enable_global_hotkey: Some(true),
@@ -500,6 +479,8 @@ impl IVerge {
 
         patch!(language);
         patch!(theme_mode);
+        patch!(active_theme);
+        patch!(prefer_system_titlebar);
         patch!(tray_event);
         patch!(env_type);
         patch!(start_page);
@@ -508,19 +489,15 @@ impl IVerge {
         patch!(enable_memory_usage);
         patch!(enable_group_icon);
         patch!(pause_render_traffic_stats_on_blur);
-        #[cfg(target_os = "macos")]
-        patch!(tray_icon);
-        patch!(menu_icon);
         patch!(menu_order);
         patch!(notice_position);
         patch!(collapse_navbar);
-        patch!(common_tray_icon);
-        patch!(sysproxy_tray_icon);
-        patch!(tun_tray_icon);
 
         patch!(enable_tun_mode);
         patch!(enable_app_routing);
         patch!(app_routing_rules);
+        patch!(rule_sources);
+        patch!(rule_source_order);
         patch!(enable_auto_launch);
         patch!(enable_silent_start);
         patch!(enable_hover_jump_navigator);
@@ -547,7 +524,6 @@ impl IVerge {
         patch!(proxy_auto_config);
         patch!(pac_file_content);
         patch!(proxy_host);
-        patch!(theme_setting);
         patch!(web_ui_list);
         patch!(clash_core);
         patch!(hotkeys);
@@ -572,7 +548,6 @@ impl IVerge {
         patch!(webdav_password);
         #[cfg(target_os = "macos")]
         patch!(enable_tray_speed);
-        // patch!(enable_tray_icon);
         patch!(tray_proxy_groups_display_mode);
         patch!(tray_inline_outbound_modes);
         patch!(enable_auto_light_weight_mode);

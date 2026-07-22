@@ -4,7 +4,8 @@
       "updateAll": "Alle Abonnements aktualisieren",
       "viewRuntimeConfig": "Laufzeit-Abonnement anzeigen",
       "reactivate": "Abonnement erneut aktivieren",
-      "import": "Importieren"
+      "import": "Importieren",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "Abonnement gewechselt",
         "profileReactivated": "Abonnement erneut aktiviert",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Selected profiles deleted successfully"
       },
       "notices": {

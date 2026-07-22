@@ -7,7 +7,7 @@
         "profiles": "Profiller",
         "connections": "Bağlantılar",
         "rules": "Kurallar",
-        "appRouting": "App Routing",
+        "extensions": "Extensions",
         "logs": "Günlükler",
         "unlock": "Test",
         "settings": "Ayarlar"

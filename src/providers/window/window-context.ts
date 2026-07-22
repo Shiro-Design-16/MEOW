@@ -4,7 +4,7 @@ import { createContext } from 'react'
 export interface WindowContextType {
   decorated: boolean | null
   maximized: boolean | null
-  toggleDecorations: () => Promise<void>
+  setDecorations: (decorated: boolean) => Promise<void>
   refreshDecorated: () => Promise<boolean>
   minimize: () => Promise<void>
   close: () => Promise<void>

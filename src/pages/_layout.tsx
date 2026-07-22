@@ -36,14 +36,10 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 
-import iconDark from '@/assets/image/icon_dark.svg?react'
-import iconLight from '@/assets/image/icon_light.svg?react'
-import LogoSvg from '@/assets/image/logo.svg?react'
 import { BaseErrorBoundary, BaseLoading } from '@/components/base'
 import { LayoutItem } from '@/components/layout/layout-item'
 import { LayoutTraffic } from '@/components/layout/layout-traffic'
 import { NoticeManager } from '@/components/layout/notice-manager'
-import { UpdateButton } from '@/components/layout/update-button'
 import {
   WindowControls,
   WindowResizeHandles,
@@ -54,6 +50,8 @@ import { useVisibility } from '@/hooks/use-visibility'
 import { useWindowDecorations } from '@/hooks/use-window'
 import { useThemeMode } from '@/services/states'
 import getSystem from '@/utils/get-system'
+import BrandIcon from '@root/resources/icon.svg?react'
+import LogoSvg from '@root/resources/logo.svg?react'
 
 import {
   useCustomTheme,
@@ -127,7 +125,6 @@ const OS = getSystem()
 
 const Layout = () => {
   const mode = useThemeMode()
-  const isDark = mode !== 'light'
   const { t } = useTranslation()
   const { theme } = useCustomTheme()
   const { verge, mutateVerge, patchVerge } = useVerge()
@@ -352,7 +349,7 @@ const Layout = () => {
                 }}
               >
                 <SvgIcon
-                  component={isDark ? iconDark : iconLight}
+                  component={BrandIcon}
                   style={{
                     height: '36px',
                     width: '36px',
@@ -360,11 +357,11 @@ const Layout = () => {
                     marginRight: '5px',
                     marginLeft: '-3px',
                   }}
+                  sx={{ color: 'text.primary' }}
                   inheritViewBox
                 />
-                <LogoSvg fill={isDark ? 'white' : 'black'} />
+                <LogoSvg fill="currentColor" style={{ color: 'inherit' }} />
               </div>
-              <UpdateButton className="the-newbtn" />
             </div>
 
             {menuUnlocked && (

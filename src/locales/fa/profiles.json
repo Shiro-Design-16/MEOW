@@ -4,7 +4,8 @@
       "updateAll": "به‌روزرسانی همه پروفایل‌ها",
       "viewRuntimeConfig": "مشاهده پیکربندی زمان اجرا",
       "reactivate": "فعال‌سازی مجدد پروفایل‌ها",
-      "import": "وارد کردن"
+      "import": "وارد کردن",
+      "importFile": "From file"
     },
     "batch": {
       "actions": {
@@ -38,6 +39,7 @@
         "profileSwitched": "پروفایل تغییر یافت",
         "profileReactivated": "پروفایل مجدداً فعال شد",
         "switchBusy": "Profile switch is already in progress",
+        "fileImported": "Local profile file imported",
         "batchDeleted": "Selected profiles deleted successfully"
       },
       "notices": {

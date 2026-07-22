@@ -5,24 +5,16 @@ use crate::module::lightweight;
 use crate::process::AsyncHandler;
 use crate::singleton;
 use crate::utils::window_manager::WindowManager;
-use crate::{
-    Type, cmd,
-    config::Config,
-    feat, logging,
-    module::lightweight::is_in_lightweight_mode,
-    utils::{dirs::find_target_icons, help},
-};
+use crate::{Type, cmd, config::Config, feat, logging, module::lightweight::is_in_lightweight_mode, utils::help};
 use clash_verge_limiter::{Limiter, SystemClock, SystemLimiter};
 use clash_verge_logging::logging_error;
 use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
 use tauri_plugin_clash_verge_sysinfo::is_current_app_handle_admin;
 use tauri_plugin_mihomo::models::Proxies;
-use tokio::fs;
 
 use super::handle;
 use anyhow::Result;
 use smartstring::alias::String;
-use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::Duration;
 use tauri::{
@@ -64,7 +56,7 @@ pub struct Tray {
 }
 
 impl TrayState {
-    async fn get_tray_icon(verge: &IVerge) -> (bool, Cow<'_, [u8]>) {
+    fn get_tray_icon(verge: &IVerge) -> &'static [u8] {
         let tun_mode = verge.enable_tun_mode.unwrap_or(false);
         let system_mode = verge.enable_system_proxy.unwrap_or(false);
         let kind = if tun_mode {
@@ -74,56 +66,11 @@ impl TrayState {
         } else {
             IconKind::Common
         };
-        Self::load_icon(verge, kind).await
-    }
-
-    async fn load_icon(verge: &IVerge, kind: IconKind) -> (bool, Cow<'_, [u8]>) {
-        let (custom_enabled, icon_name) = match kind {
-            IconKind::Common => (verge.common_tray_icon.unwrap_or(false), "common"),
-            IconKind::SysProxy => (verge.sysproxy_tray_icon.unwrap_or(false), "sysproxy"),
-            IconKind::Tun => (verge.tun_tray_icon.unwrap_or(false), "tun"),
-        };
-
-        if custom_enabled
-            && let Ok(Some(path)) = find_target_icons(icon_name)
-            && let Ok(data) = fs::read(path).await
-        {
-            return (true, Cow::Owned(data));
+        match kind {
+            IconKind::Common => include_bytes!("../../../../.generated/tray/tray-idle.png"),
+            IconKind::SysProxy => include_bytes!("../../../../.generated/tray/tray-sys.png"),
+            IconKind::Tun => include_bytes!("../../../../.generated/tray/tray-tun.png"),
         }
-
-        Self::default_icon(verge, kind)
-    }
-
-    #[allow(clippy::missing_const_for_fn)]
-    fn default_icon(verge: &IVerge, kind: IconKind) -> (bool, Cow<'_, [u8]>) {
-        #[cfg(target_os = "macos")]
-        {
-            let is_mono = verge.tray_icon.as_deref().unwrap_or("monochrome") == "monochrome";
-            if is_mono {
-                return (
-                    false,
-                    match kind {
-                        IconKind::Common => Cow::Borrowed(include_bytes!("../../../icons/tray-icon-mono.ico")),
-                        IconKind::SysProxy => {
-                            Cow::Borrowed(include_bytes!("../../../icons/tray-icon-sys-mono-new.ico"))
-                        }
-                        IconKind::Tun => Cow::Borrowed(include_bytes!("../../../icons/tray-icon-tun-mono-new.ico")),
-                    },
-                );
-            }
-        }
-
-        #[cfg(not(target_os = "macos"))]
-        let _ = verge;
-
-        (
-            false,
-            match kind {
-                IconKind::Common => Cow::Borrowed(include_bytes!("../../../icons/tray-icon.ico")),
-                IconKind::SysProxy => Cow::Borrowed(include_bytes!("../../../icons/tray-icon-sys.ico")),
-                IconKind::Tun => Cow::Borrowed(include_bytes!("../../../icons/tray-icon-tun.ico")),
-            },
-        )
     }
 }
 
@@ -249,7 +196,7 @@ impl Tray {
     }
 
     /// 更新托盘图标
-    pub async fn update_icon(&self, verge: &IVerge) -> Result<()> {
+    pub fn update_icon(&self, verge: &IVerge) -> Result<()> {
         if handle::Handle::global().is_exiting() {
             logging!(debug, Type::Tray, "应用正在退出，跳过托盘图标更新");
             return Ok(());
@@ -262,19 +209,19 @@ impl Tray {
             return Ok(());
         };
 
-        let (_is_custom_icon, icon_bytes) = TrayState::get_tray_icon(verge).await;
+        let icon_bytes = TrayState::get_tray_icon(verge);
 
         let template = {
             #[cfg(target_os = "macos")]
             {
-                verge.tray_icon.as_ref().is_none_or(|v| v == "monochrome")
+                true
             }
             #[cfg(not(target_os = "macos"))]
             {
                 false
             }
         };
-        let icon = Some(tauri::image::Image::from_bytes(&icon_bytes)?);
+        let icon = Some(tauri::image::Image::from_bytes(icon_bytes)?);
 
         logging_error!(Type::Tray, tray.set_icon_with_as_template(icon, template));
 
@@ -324,7 +271,7 @@ impl Tray {
         );
 
         let tooltip = format!(
-            "Clash Verge {}\n{}: {}\n{}: {}\n{}: {}",
+            "MEOW {}\n{}: {}\n{}: {}\n{}: {}",
             reassembled_version,
             sys_proxy_text,
             switch_str(system_proxy),
@@ -355,7 +302,7 @@ impl Tray {
         AsyncHandler::spawn(|| async {
             logging_error!(Type::Tray, Self::global().update_menu().await);
         });
-        self.update_icon(&verge).await?;
+        self.update_icon(&verge)?;
         #[cfg(target_os = "macos")]
         self.update_speed_task(verge.enable_tray_speed.unwrap_or(false));
         self.update_tooltip().await?;
@@ -365,7 +312,7 @@ impl Tray {
     pub async fn update_menu_and_icon(&self) {
         logging_error!(Type::Tray, self.update_menu().await);
         let verge = Config::verge().await.data_arc();
-        logging_error!(Type::Tray, self.update_icon(&verge).await);
+        logging_error!(Type::Tray, self.update_icon(&verge));
     }
 
     async fn create_tray_from_handle(&self, app_handle: &AppHandle) -> Result<()> {
@@ -378,8 +325,8 @@ impl Tray {
 
         let verge = Config::verge().await.data_arc();
 
-        let icon_bytes = TrayState::get_tray_icon(&verge).await.1;
-        let icon = tauri::image::Image::from_bytes(&icon_bytes)?;
+        let icon_bytes = TrayState::get_tray_icon(&verge);
+        let icon = tauri::image::Image::from_bytes(icon_bytes)?;
 
         #[cfg(target_os = "linux")]
         let builder = TrayIconBuilder::with_id(TRAY_ID).icon(icon).icon_as_template(false);
@@ -391,8 +338,7 @@ impl Tray {
         let mut builder = TrayIconBuilder::with_id(TRAY_ID).icon(icon).icon_as_template(false);
         #[cfg(target_os = "macos")]
         {
-            let is_monochrome = verge.tray_icon.as_ref().is_none_or(|v| v == "monochrome");
-            builder = builder.icon_as_template(is_monochrome);
+            builder = builder.icon_as_template(true);
         }
 
         #[cfg(any(target_os = "macos", target_os = "windows"))]

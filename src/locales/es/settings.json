@@ -110,11 +110,6 @@
         "open": "Configuración de CORS externo"
       }
     },
-    "appearance": {
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
-    },
     "clash": {
       "title": "Ajustes de Clash",
       "form": {
@@ -187,12 +182,10 @@
         },
         "fields": {
           "language": "Configuración de idioma",
-          "themeMode": "Modo de tema",
           "trayClickEvent": "Evento de clic en el icono de la bandeja",
           "copyEnvType": "Copiar tipo de variable de entorno",
           "startPage": "Página de inicio",
           "startupScript": "Script de inicio",
-          "themeSetting": "Configuración de tema",
           "layoutSetting": "Configuración de la interfaz",
           "misc": "Ajustes varios",
           "hotkeySetting": "Configuración de atajos de teclado"
@@ -226,58 +219,31 @@
           "vergeVersion": "Versión de Verge"
         }
       },
-      "theme": {
-        "title": "Configuración de tema",
-        "fields": {
-          "primaryColor": "Color principal",
-          "secondaryColor": "Color secundario",
-          "primaryText": "Color principal del texto",
-          "secondaryText": "Color secundario del texto",
-          "infoColor": "Color de información",
-          "warningColor": "Color de advertencia",
-          "errorColor": "Color de error",
-          "successColor": "Color de éxito",
-          "fontFamily": "Familia tipográfica",
-          "cssInjection": "Inyección de CSS"
-        },
-        "actions": {
-          "editCss": "Edit CSS"
-        },
-        "dialogs": {
-          "editCssTitle": "Edit CSS"
-        }
-      },
       "layout": {
         "title": "Configuración de la interfaz",
         "fields": {
           "preferSystemTitlebar": "Prefer System Titlebar",
+          "screenshotResolution": "Screenshot Window Size",
           "trafficGraph": "Gráfico de tráfico",
           "memoryUsage": "Uso de memoria del núcleo",
           "proxyGroupIcon": "Icono del grupo de proxy",
           "toastPosition": "Posición del aviso",
           "hoverNavigator": "Hover Jump Navigator",
           "hoverNavigatorDelay": "Hover Jump Navigator Delay",
-          "navIcon": "Icono de la barra de navegación",
           "collapseNavBar": "Colapsar barra de navegación",
-          "trayIcon": "Icono de la bandeja",
           "proxyGroupsDisplayMode": "Proxy Groups Display Mode",
           "showOutboundModesInline": "Show Outbound Modes Inline",
-          "commonTrayIcon": "Icono de bandeja común",
-          "systemProxyTrayIcon": "Icono de bandeja del proxy del sistema",
-          "tunTrayIcon": "Icono de bandeja del modo TUN",
-          "enableTrayIcon": "Habilitar icono de la bandeja",
           "enableTraySpeed": "Habilitar velocidad en la bandeja",
           "pauseRenderTrafficStatsOnBlur": "Pausar el renderizado de estadísticas de tráfico al perder el foco"
         },
         "tooltips": {
+          "screenshotResolution": "Resize and center the current window for creating a theme preview screenshot",
           "hoverNavigator": "Automatically scroll to the corresponding proxy group when hovering over alphabet letters",
           "hoverNavigatorDelay": "Delay before auto scrolling when hovering, in milliseconds"
         },
         "options": {
-          "icon": {
-            "monochrome": "Icono monocromo",
-            "colorful": "Icono colorido",
-            "disable": "Deshabilitar"
+          "screenshotResolution": {
+            "select": "Select a preset"
           },
           "toastPosition": {
             "topLeft": "Arriba a la izquierda",

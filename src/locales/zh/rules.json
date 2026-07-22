@@ -1,5 +1,61 @@
 {
   "page": {
+    "actions": {
+      "back": "返回"
+    },
+    "tabs": {
+      "sources": "规则源",
+      "preview": "生效预览"
+    },
+    "preview": {
+      "description": "这里显示编译后的运行时规则，仅用于验证与排查；日常编辑请返回规则源。"
+    },
+    "appRouting": {
+      "title": "应用路由",
+      "highest": "最高优先级",
+      "description": "共 {{count}} 条应用路由；启用后会在 TUN 模式下插入到所有其他规则源之前。",
+      "configure": "配置"
+    },
+    "sources": {
+      "title": "规则源",
+      "description": "拖动调整首次匹配优先级。当前订阅始终启用，但可以参与排序。",
+      "ruleCount": "{{count}} 条规则",
+      "active": {
+        "locked": "当前订阅",
+        "noSubscription": "尚未激活订阅"
+      },
+      "status": {
+        "enabled": "已启用",
+        "disabled": "已停用",
+        "invalid": "YAML 无效"
+      },
+      "actions": {
+        "open": "打开规则源",
+        "editOverride": "编辑订阅规则覆写",
+        "import": "导入 YAML",
+        "create": "新建规则源"
+      },
+      "messages": {
+        "imported": "规则源已导入",
+        "created": "规则源已创建",
+        "confirmDelete": "确定删除规则源“{{name}}”吗？",
+        "deleted": "规则源已删除",
+        "saved": "规则源已保存"
+      },
+      "create": {
+        "title": "新建规则源",
+        "name": "规则源名称"
+      },
+      "editor": {
+        "visual": "可视化",
+        "empty": "这个规则源还没有行内规则。",
+        "addRule": "添加规则"
+      }
+    },
+    "legacy": {
+      "title": "高级兼容",
+      "description": "迁移期间继续保留现有的全局 YAML 覆写与脚本。它们能够修改完整配置，并不局限于规则。"
+    },
     "provider": {
       "trigger": "规则集合",
       "dialogTitle": "规则集合",
@@ -9,6 +65,46 @@
       }
     },
     "title": "规则"
+  },
+  "extensions": {
+    "title": "扩展",
+    "theme": {
+      "title": "主题",
+      "description": "主题包统一定义界面颜色、字体与图形资源。",
+      "package": "主题包",
+      "manage": "管理主题",
+      "mode": "外观模式",
+      "modeUnavailable": "此主题没有同时适配浅色与深色模式。",
+      "modes": {
+        "light": "浅色",
+        "dark": "深色",
+        "system": "跟随系统"
+      },
+      "manager": {
+        "title": "主题管理",
+        "description": "浏览已安装主题、比较界面预览，并选择当前使用的主题包。",
+        "import": "导入主题",
+        "importDialogTitle": "选择包含 theme.json 的主题包目录",
+        "imported": "主题包已导入",
+        "removed": "主题包已删除",
+        "confirmRemove": "确定删除主题“{{name}}”吗？",
+        "preview": "主题预览",
+        "previewLight": "浅色主题预览",
+        "previewDark": "深色主题预览",
+        "active": "正在使用",
+        "builtIn": "内置",
+        "local": "本地导入",
+        "remove": "删除主题",
+        "apply": "应用",
+        "applied": "已应用",
+        "onlineTitle": "在线主题",
+        "onlineDescription": "已为未来的 MEOW 在线主题目录保留下载接口。"
+      }
+    },
+    "empty": {
+      "title": "尚未安装扩展",
+      "description": "这里将用于安装具有独立权限和配置界面的 MEOW 扩展。"
+    }
   },
   "feedback": {
     "notifications": {

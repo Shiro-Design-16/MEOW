@@ -71,11 +71,13 @@ export const WindowProvider: React.FC<{ children: React.ReactNode }> = ({
     return val
   }, [currentWindow])
 
-  const toggleDecorations = useCallback(async () => {
-    const currentVal = await currentWindow.isDecorated()
-    await currentWindow.setDecorations(!currentVal)
-    setDecorated(!currentVal)
-  }, [currentWindow])
+  const setDecorations = useCallback(
+    async (nextDecorated: boolean) => {
+      await currentWindow.setDecorations(nextDecorated)
+      setDecorated(nextDecorated)
+    },
+    [currentWindow],
+  )
 
   useEffect(() => {
     refreshDecorated()
@@ -86,7 +88,7 @@ export const WindowProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({
       decorated,
       maximized,
-      toggleDecorations,
+      setDecorations,
       refreshDecorated,
       minimize,
       close,
@@ -97,7 +99,7 @@ export const WindowProvider: React.FC<{ children: React.ReactNode }> = ({
     [
       decorated,
       maximized,
-      toggleDecorations,
+      setDecorations,
       refreshDecorated,
       minimize,
       close,

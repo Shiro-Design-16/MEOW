@@ -184,8 +184,8 @@ export interface TranslationResources {
             unlock: string
           }
           tabs: {
-            appRouting: string
             connections: string
+            extensions: string
             home: string
             logs: string
             profiles: string
@@ -346,6 +346,7 @@ export interface TranslationResources {
       page: {
         actions: {
           import: string
+          importFile: string
           reactivate: string
           updateAll: string
           viewRuntimeConfig: string
@@ -374,6 +375,7 @@ export interface TranslationResources {
           }
           notifications: {
             batchDeleted: string
+            fileImported: string
             importFail: string
             importNeedsRefresh: string
             importRetry: string
@@ -486,6 +488,46 @@ export interface TranslationResources {
       }
     }
     rules: {
+      extensions: {
+        empty: {
+          description: string
+          title: string
+        }
+        theme: {
+          description: string
+          manage: string
+          manager: {
+            active: string
+            applied: string
+            apply: string
+            builtIn: string
+            confirmRemove: string
+            description: string
+            import: string
+            importDialogTitle: string
+            imported: string
+            local: string
+            onlineDescription: string
+            onlineTitle: string
+            preview: string
+            previewDark: string
+            previewLight: string
+            remove: string
+            removed: string
+            title: string
+          }
+          mode: string
+          modes: {
+            dark: string
+            light: string
+            system: string
+          }
+          modeUnavailable: string
+          package: string
+          title: string
+        }
+        title: string
+      }
       feedback: {
         notifications: {
           provider: {
@@ -556,6 +598,22 @@ export interface TranslationResources {
         }
       }
       page: {
+        actions: {
+          back: string
+        }
+        appRouting: {
+          configure: string
+          description: string
+          highest: string
+          title: string
+        }
+        legacy: {
+          description: string
+          title: string
+        }
+        preview: {
+          description: string
+        }
         provider: {
           actions: {
             update: string
@@ -563,6 +621,46 @@ export interface TranslationResources {
           }
           dialogTitle: string
           trigger: string
+        }
+        sources: {
+          actions: {
+            create: string
+            editOverride: string
+            import: string
+            open: string
+          }
+          active: {
+            locked: string
+            noSubscription: string
+          }
+          create: {
+            name: string
+            title: string
+          }
+          description: string
+          editor: {
+            addRule: string
+            empty: string
+            visual: string
+          }
+          messages: {
+            confirmDelete: string
+            created: string
+            deleted: string
+            imported: string
+            saved: string
+          }
+          ruleCount: string
+          status: {
+            disabled: string
+            enabled: string
+            invalid: string
+          }
+          title: string
+        }
+        tabs: {
+          preview: string
+          sources: string
         }
         title: string
       }
@@ -610,8 +708,6 @@ export interface TranslationResources {
               misc: string
               startPage: string
               startupScript: string
-              themeMode: string
-              themeSetting: string
               trayClickEvent: string
             }
             title: string
@@ -624,34 +720,27 @@ export interface TranslationResources {
           layout: {
             fields: {
               collapseNavBar: string
-              commonTrayIcon: string
-              enableTrayIcon: string
               enableTraySpeed: string
               hoverNavigator: string
               hoverNavigatorDelay: string
               memoryUsage: string
-              navIcon: string
               pauseRenderTrafficStatsOnBlur: string
               preferSystemTitlebar: string
               proxyGroupIcon: string
               proxyGroupsDisplayMode: string
+              screenshotResolution: string
               showOutboundModesInline: string
-              systemProxyTrayIcon: string
               toastPosition: string
               trafficGraph: string
-              trayIcon: string
-              tunTrayIcon: string
             }
             options: {
-              icon: {
-                colorful: string
-                disable: string
-                monochrome: string
-              }
               proxyGroupsDisplayMode: {
                 default: string
                 disable: string
                 inline: string
+              }
+              screenshotResolution: {
+                select: string
               }
               toastPosition: {
                 bottomLeft: string
@@ -664,28 +753,8 @@ export interface TranslationResources {
             tooltips: {
               hoverNavigator: string
               hoverNavigatorDelay: string
+              screenshotResolution: string
             }
-          }
-          theme: {
-            actions: {
-              editCss: string
-            }
-            dialogs: {
-              editCssTitle: string
-            }
-            fields: {
-              cssInjection: string
-              errorColor: string
-              fontFamily: string
-              infoColor: string
-              primaryColor: string
-              primaryText: string
-              secondaryColor: string
-              secondaryText: string
-              successColor: string
-              warningColor: string
-            }
-            title: string
           }
         }
       }
@@ -1066,11 +1135,6 @@ export interface TranslationResources {
         title: string
       }
       sections: {
-        appearance: {
-          dark: string
-          light: string
-          system: string
-        }
         appRouting: {
           actions: {
             add: string

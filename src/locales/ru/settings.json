@@ -110,11 +110,6 @@
         "open": "Настройки внешнего CORS"
       }
     },
-    "appearance": {
-      "light": "Светлая",
-      "dark": "Тёмная",
-      "system": "Системная"
-    },
     "clash": {
       "title": "Настройки Clash",
       "form": {
@@ -187,12 +182,10 @@
         },
         "fields": {
           "language": "Язык",
-          "themeMode": "Цветовая тема",
           "trayClickEvent": "Событие при щелчке по иконке в трее",
           "copyEnvType": "Скопировать тип Env",
           "startPage": "Главная страница",
           "startupScript": "Скрипт запуска",
-          "themeSetting": "Настройки темы",
           "layoutSetting": "Настройки раскладки",
           "misc": "Расширенные настройки",
           "hotkeySetting": "Настройки сочетаний клавиш"
@@ -226,58 +219,31 @@
           "vergeVersion": "Версия Clash Verge Rev"
         }
       },
-      "theme": {
-        "title": "Настройки темы",
-        "fields": {
-          "primaryColor": "Основной цвет",
-          "secondaryColor": "Вторичный цвет",
-          "primaryText": "Основной текст",
-          "secondaryText": "Дополнительный текст",
-          "infoColor": "Информационный цвет",
-          "warningColor": "Цвет предупреждения",
-          "errorColor": "Цвет ошибки",
-          "successColor": "Цвет успеха",
-          "fontFamily": "Семейство шрифтов",
-          "cssInjection": "Внедрение CSS"
-        },
-        "actions": {
-          "editCss": "Редактировать CSS"
-        },
-        "dialogs": {
-          "editCssTitle": "Редактирование CSS"
-        }
-      },
       "layout": {
         "title": "Настройки раскладки",
         "fields": {
           "preferSystemTitlebar": "Использовать системную панель заголовка",
+          "screenshotResolution": "Screenshot Window Size",
           "trafficGraph": "График трафика",
           "memoryUsage": "Использование памяти",
           "proxyGroupIcon": "Значок группы прокси",
           "toastPosition": "Расположение уведомлений",
           "hoverNavigator": "Навигация по алфавиту при наведении",
           "hoverNavigatorDelay": "Задержка навигации при наведении",
-          "navIcon": "Иконки навигации",
           "collapseNavBar": "Свернуть панель навигации",
-          "trayIcon": "Значок в трее",
           "proxyGroupsDisplayMode": "Режим отображения групп прокси",
           "showOutboundModesInline": "Показывать режимы исходящих соединений в строку",
-          "commonTrayIcon": "Общий значок в трее",
-          "systemProxyTrayIcon": "Значок системного прокси в трее",
-          "tunTrayIcon": "Значок TUN в трее",
-          "enableTrayIcon": "Показывать значок в трее",
           "enableTraySpeed": "Показывать скорость в трее",
           "pauseRenderTrafficStatsOnBlur": "При потере фокуса приостанавливать отрисовку статистики трафика"
         },
         "tooltips": {
+          "screenshotResolution": "Resize and center the current window for creating a theme preview screenshot",
           "hoverNavigator": "Автоматически прокручивает к группе прокси при наведении на буквы",
           "hoverNavigatorDelay": "Задержка перед прокруткой при наведении (в миллисекундах)"
         },
         "options": {
-          "icon": {
-            "monochrome": "Монохромные",
-            "colorful": "Цветные",
-            "disable": "Отключить"
+          "screenshotResolution": {
+            "select": "Select a preset"
           },
           "toastPosition": {
             "topLeft": "Сверху слева",
