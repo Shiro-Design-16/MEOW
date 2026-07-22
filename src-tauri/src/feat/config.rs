@@ -72,6 +72,7 @@ bitflags! {
 
 fn determine_update_flags(patch: &IVerge) -> UpdateFlags {
     let tun_mode = patch.enable_tun_mode;
+    let app_routing_changed = patch.enable_app_routing.is_some() || patch.app_routing_rules.is_some();
     let auto_launch = patch.enable_auto_launch;
     let system_proxy = patch.enable_system_proxy;
     let pac = patch.proxy_auto_config;
@@ -146,6 +147,9 @@ fn determine_update_flags(patch: &IVerge) -> UpdateFlags {
     }
     if tun_mode.is_some() {
         update_flags.insert(UpdateFlags::CLASH_CONFIG | UpdateFlags::GROUP_SYS_TRAY);
+    }
+    if app_routing_changed {
+        update_flags.insert(UpdateFlags::CLASH_CONFIG | UpdateFlags::VERGE_CONFIG);
     }
     if enable_global_hotkey.is_some() || home_cards.is_some() {
         update_flags.insert(UpdateFlags::VERGE_CONFIG);

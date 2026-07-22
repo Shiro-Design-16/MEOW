@@ -43,6 +43,32 @@
         "tunMode": "虚拟网卡模式"
       }
     },
+    "appRouting": {
+      "title": "按应用路由",
+      "description": "仅在 TUN 模式下，根据 macOS 应用进程将流量交给指定策略；其他应用继续执行原有规则",
+      "fields": {
+        "enabled": "启用应用路由",
+        "routes": "应用路由规则",
+        "application": "应用",
+        "policy": "路由策略"
+      },
+      "actions": {
+        "configure": "配置按应用路由",
+        "add": "添加应用",
+        "refresh": "重新扫描应用"
+      },
+      "messages": {
+        "tunActive": "TUN 已开启。启用的应用规则将插入最终配置的最前面。",
+        "tunRequired": "TUN 当前未开启。规则会被保存，但只有开启 TUN 后才会生效。",
+        "ruleModeRequired": "TUN 已开启，但当前不是规则模式。应用规则会被保存，切换到规则模式后生效。",
+        "empty": "尚未添加应用。",
+        "saved": "应用路由已保存并重新加载",
+        "duplicateApp": "同一个应用只能添加一次",
+        "policyRequired": "每个应用都必须选择有效的路由策略（不能包含逗号或换行）",
+        "noMoreApps": "没有更多可添加的应用",
+        "helperCount": "包含 {{count}} 个辅助进程"
+      }
+    },
     "externalController": {
       "title": "外部控制器监听地址",
       "fields": {

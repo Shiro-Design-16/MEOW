@@ -21,7 +21,7 @@
 </p>
 
 > [!IMPORTANT]
-> MEOW 是 Clash Verge Rev 的非官方 fork。当前初始化阶段仅调整名称、Logo、图标、文档等品牌呈现，不对上游功能作出改动；未来可能发展独立功能。MEOW 与 Clash Verge、Clash Verge Rev 及其维护者不存在官方隶属或背书关系；MEOW 的问题请提交至 [MEOW 仓库](https://github.com/Shiro-Design-16/MEOW/issues)，请勿向上游项目反馈仅在 MEOW 中出现的问题。
+> MEOW 是 Clash Verge Rev 的非官方 fork。`MEOW-0.0.1` 基线仅调整品牌与项目声明；当前开发分支已开始加入独立维护的实验功能。MEOW 与 Clash Verge、Clash Verge Rev 及其维护者不存在官方隶属或背书关系；MEOW 的问题请提交至 [MEOW 仓库](https://github.com/Shiro-Design-16/MEOW/issues)，请勿向上游项目反馈仅在 MEOW 中出现的问题。
 
 ## 预览
 
@@ -33,9 +33,9 @@
 
 ## 安装
 
-MEOW 0.0.1 将作为首个源码版本发布在 [Releases](https://github.com/Shiro-Design-16/MEOW/releases) 页面，Git 标签为 `MEOW-0.0.1`。
+MEOW 0.0.1 当前仍处于开发阶段，源码更新保存在仓库的 `dev` 分支；首个正式 Release 将在图标替换和发布准备完成后创建。
 
-该版本暂不提供安装包。Windows、macOS 和 Linux 安装包将在 MEOW 完成独立应用标识、更新签名和构建流程后提供。在此之前，请从源码构建，或继续使用 [Clash Verge Rev 官方版本](https://github.com/clash-verge-rev/clash-verge-rev/releases)。
+仓库目前不提供正式签名的安装包。本地生成的 macOS 包仅用于开发测试；正式安装包将在独立更新签名和发布流程准备完成后提供。
 
 ## 功能
 
@@ -48,6 +48,8 @@ MEOW 当前完整继承 Clash Verge Rev v2.5.2 的功能：
 - 系统代理、守卫和 `TUN`（虚拟网卡）模式
 - 可视化节点与规则编辑
 - WebDAV 配置备份和同步
+
+当前开发分支还包含实验性的 macOS 按应用路由：所有应用流量仍进入 TUN，选定应用按进程匹配到指定策略，其他应用继续执行原有规则。该功能要求同时开启 TUN 和规则模式。
 
 功能使用与常见问题可参考 [Clash Verge Rev 文档](https://clash-verge-rev.github.io/)。请注意，该文档由上游维护，其中的项目名称、下载地址和社区入口均指向上游，而非 MEOW。
 

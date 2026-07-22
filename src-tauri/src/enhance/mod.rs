@@ -1,3 +1,4 @@
+mod app_routing;
 mod chain;
 pub mod field;
 mod merge;
@@ -6,6 +7,7 @@ pub mod seq;
 mod tun;
 
 use self::{
+    app_routing::use_app_routing,
     chain::{AsyncChainItemFrom as _, ChainItem, ChainType},
     field::{use_keys, use_lowercase, use_sort},
     merge::use_merge,
@@ -15,7 +17,7 @@ use self::{
 };
 use crate::utils::dirs;
 use crate::{
-    config::{Config, IVerge, PrfItem},
+    config::{Config, IAppRoutingRule, IVerge, PrfItem},
     constants,
     utils::tmpl,
 };
@@ -36,6 +38,8 @@ struct ConfigValues {
     socks_enabled: bool,
     http_enabled: bool,
     enable_dns_settings: bool,
+    enable_app_routing: bool,
+    app_routing_rules: Vec<IAppRoutingRule>,
     #[cfg(not(target_os = "windows"))]
     redir_enabled: bool,
     #[cfg(target_os = "linux")]
@@ -116,6 +120,8 @@ async fn get_config_values() -> ConfigValues {
         ref verge_socks_enabled,
         ref verge_http_enabled,
         ref enable_dns_settings,
+        ref enable_app_routing,
+        ref app_routing_rules,
         ..
     } = **verge_arc;
 
@@ -134,6 +140,9 @@ async fn get_config_values() -> ConfigValues {
     #[cfg(target_os = "linux")]
     let tproxy_enabled = verge_arc.verge_tproxy_enabled.unwrap_or(false);
 
+    let app_routing_enabled = enable_app_routing.unwrap_or(false);
+    let app_routing_rules = app_routing_rules.clone().unwrap_or_default();
+
     drop(verge_arc);
     drop(verge);
 
@@ -145,6 +154,8 @@ async fn get_config_values() -> ConfigValues {
         socks_enabled,
         http_enabled,
         enable_dns_settings,
+        enable_app_routing: app_routing_enabled,
+        app_routing_rules,
         #[cfg(not(target_os = "windows"))]
         redir_enabled,
         #[cfg(target_os = "linux")]
@@ -693,6 +704,8 @@ pub async fn enhance() -> Result<(Mapping, HashSet<String>, HashMap<String, Resu
         socks_enabled,
         http_enabled,
         enable_dns_settings,
+        enable_app_routing,
+        app_routing_rules,
         #[cfg(not(target_os = "windows"))]
         redir_enabled,
         #[cfg(target_os = "linux")]
@@ -763,6 +776,7 @@ pub async fn enhance() -> Result<(Mapping, HashSet<String>, HashMap<String, Resu
     let config = enforce_control_plane(config, control_plane);
     let config = enforce_dns_ipv6(config, dns_ipv6);
     let config = ensure_lan_bind_address(config);
+    let config = use_app_routing(config, enable_tun, enable_app_routing, &app_routing_rules);
 
     let config = cleanup_proxy_groups(config);
     let config = use_sort(config);

@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Thank you for your interest in contributing to **MEOW**! MEOW is an unofficial independent fork of [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev). During the current initialization phase, changes are limited to brand presentation, such as the name, logos, icons, copy, and related metadata; independent features may be introduced in later development phases.
+Thank you for your interest in contributing to **MEOW**! MEOW is an unofficial independent fork of [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev). The `MEOW-0.0.1` baseline was limited to brand presentation; current development may include independently maintained features, starting with experimental macOS per-app routing in TUN mode.
 
 Before opening a pull request, please keep these boundaries in mind:
 

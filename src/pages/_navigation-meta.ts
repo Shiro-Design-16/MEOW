@@ -13,6 +13,10 @@ export const navigationItems = {
     path: '/connections',
   },
   rules: { label: 'layout.components.navigation.tabs.rules', path: '/rules' },
+  appRouting: {
+    label: 'layout.components.navigation.tabs.appRouting',
+    path: '/app-routing',
+  },
   logs: { label: 'layout.components.navigation.tabs.logs', path: '/logs' },
   unlock: {
     label: 'layout.components.navigation.tabs.unlock',

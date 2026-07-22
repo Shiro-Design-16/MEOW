@@ -1,3 +1,4 @@
+import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined'
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined'
 import ForkRightOutlinedIcon from '@mui/icons-material/ForkRightOutlined'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
@@ -19,6 +20,7 @@ import SettingsSvg from '@/assets/image/itemicon/settings.svg?react'
 import UnlockSvg from '@/assets/image/itemicon/unlock.svg?react'
 import { BaseLoading } from '@/components/base'
 import { ensureLanguageSections } from '@/services/i18n'
+import getSystem from '@/utils/get-system'
 
 import { navigationItems } from './_navigation-meta'
 import HomePage from './home'
@@ -126,6 +128,8 @@ export const preloadLogsPage = createRoutePreload(
   'logs',
 )
 
+const isMAC = getSystem() === 'macos'
+
 export const navItems: NavigationItem[] = [
   {
     ...navigationItems.home,
@@ -152,6 +156,18 @@ export const navItems: NavigationItem[] = [
     icon: [<ForkRightOutlinedIcon key="mui" />, <RulesSvg key="svg" />],
     ...createLazyRoute(() => import('./rules'), 'rules'),
   },
+  ...(isMAC
+    ? [
+        {
+          ...navigationItems.appRouting,
+          icon: [
+            <AppsOutlinedIcon key="mui" />,
+            <AppsOutlinedIcon color="primary" key="color" />,
+          ],
+          ...createLazyRoute(() => import('./app-routing'), 'settings'),
+        },
+      ]
+    : []),
   {
     ...navigationItems.logs,
     icon: [<SubjectOutlinedIcon key="mui" />, <LogsSvg key="svg" />],

@@ -184,6 +184,7 @@ export interface TranslationResources {
             unlock: string
           }
           tabs: {
+            appRouting: string
             connections: string
             home: string
             logs: string
@@ -1069,6 +1070,32 @@ export interface TranslationResources {
           dark: string
           light: string
           system: string
+        }
+        appRouting: {
+          actions: {
+            add: string
+            configure: string
+            refresh: string
+          }
+          description: string
+          fields: {
+            application: string
+            enabled: string
+            policy: string
+            routes: string
+          }
+          messages: {
+            duplicateApp: string
+            empty: string
+            helperCount: string
+            noMoreApps: string
+            policyRequired: string
+            ruleModeRequired: string
+            saved: string
+            tunActive: string
+            tunRequired: string
+          }
+          title: string
         }
         clash: {
           form: {

@@ -43,6 +43,32 @@
         "tunMode": "TUN 모드"
       }
     },
+    "appRouting": {
+      "title": "Per-App Routing",
+      "description": "In TUN mode, route selected macOS app processes through a chosen policy while every other app continues using the existing rules",
+      "fields": {
+        "enabled": "Enable per-app routing",
+        "routes": "Application routes",
+        "application": "Application",
+        "policy": "Routing policy"
+      },
+      "actions": {
+        "configure": "Configure per-app routing",
+        "add": "Add application",
+        "refresh": "Rescan applications"
+      },
+      "messages": {
+        "tunActive": "TUN is enabled. Active application rules are inserted before all existing rules.",
+        "tunRequired": "TUN is currently disabled. Rules are saved but become active only after TUN is enabled.",
+        "ruleModeRequired": "TUN is enabled, but the current mode is not Rule. Routes are saved and become active after switching to Rule mode.",
+        "empty": "No applications have been added.",
+        "saved": "Per-app routing was saved and reloaded",
+        "duplicateApp": "An application can only be added once",
+        "policyRequired": "Every application must have a valid routing policy without commas or line breaks",
+        "noMoreApps": "There are no more applications to add",
+        "helperCount": "Includes {{count}} helper process(es)"
+      }
+    },
     "externalController": {
       "title": "외부 컨트롤러",
       "fields": {

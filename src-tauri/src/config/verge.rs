@@ -9,6 +9,22 @@ use log::LevelFilter;
 use serde::{Deserialize, Serialize};
 use smartstring::alias::String;
 
+#[derive(Default, Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+pub struct IAppRoutingRule {
+    pub app_name: String,
+    pub bundle_id: Option<String>,
+    pub process_path: Option<String>,
+    #[serde(default)]
+    pub process_names: Vec<String>,
+    pub policy: String,
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+}
+
+const fn default_true() -> bool {
+    true
+}
+
 /// ### `verge.yaml` schema
 #[derive(Default, Debug, Clone, Deserialize, Serialize)]
 pub struct IVerge {
@@ -84,6 +100,12 @@ pub struct IVerge {
 
     /// clash tun mode
     pub enable_tun_mode: Option<bool>,
+
+    /// Enable MEOW's TUN-only per-app routing overlay.
+    pub enable_app_routing: Option<bool>,
+
+    /// Managed process routing rules injected before subscription rules.
+    pub app_routing_rules: Option<Vec<IAppRoutingRule>>,
 
     /// can the app auto startup
     pub enable_auto_launch: Option<bool>,
@@ -403,6 +425,8 @@ impl IVerge {
             common_tray_icon: Some(false),
             sysproxy_tray_icon: Some(false),
             tun_tray_icon: Some(false),
+            enable_app_routing: Some(false),
+            app_routing_rules: Some(Vec::new()),
             enable_auto_launch: Some(false),
             enable_silent_start: Some(false),
             enable_hover_jump_navigator: Some(true),
@@ -429,7 +453,7 @@ impl IVerge {
             use_default_bypass: Some(true),
             proxy_guard_duration: Some(30),
             auto_close_connection: Some(true),
-            auto_check_update: Some(true),
+            auto_check_update: Some(false),
             enable_builtin_enhanced: Some(true),
             auto_log_clean: Some(2), // 1: 1天, 2: 7天, 3: 30天, 4: 90天
             enable_auto_backup_schedule: Some(false),
@@ -495,6 +519,8 @@ impl IVerge {
         patch!(tun_tray_icon);
 
         patch!(enable_tun_mode);
+        patch!(enable_app_routing);
+        patch!(app_routing_rules);
         patch!(enable_auto_launch);
         patch!(enable_silent_start);
         patch!(enable_hover_jump_navigator);

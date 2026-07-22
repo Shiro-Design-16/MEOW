@@ -417,6 +417,10 @@ export async function getSystemHostname() {
   return invoke<string>('get_system_hostname')
 }
 
+export async function listMacApplications() {
+  return invoke<IMacApplication[]>('list_macos_applications')
+}
+
 export async function getNetworkInterfacesInfo() {
   return invoke<INetworkInterface[]>('get_network_interfaces_info')
 }

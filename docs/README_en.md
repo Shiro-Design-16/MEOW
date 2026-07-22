@@ -21,7 +21,7 @@ An independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-r
 </p>
 
 > [!IMPORTANT]
-> During its initial phase, MEOW changes only brand presentation, including the name, logo, icons, documentation, and related metadata. It does not currently change upstream behavior, although independent features may be added later. MEOW is not affiliated with or endorsed by Clash Verge, Clash Verge Rev, or their maintainers. Report MEOW-specific issues in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not to upstream maintainers.
+> The `MEOW-0.0.1` baseline changed only brand presentation and project declarations. The current development branch has begun adding independently maintained experimental features. MEOW is not affiliated with or endorsed by Clash Verge, Clash Verge Rev, or their maintainers. Report MEOW-specific issues in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not to upstream maintainers.
 
 ## Preview
 
@@ -33,9 +33,9 @@ An independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-r
 
 ## Install
 
-MEOW 0.0.1 will be published as the first source release on the [Releases page](https://github.com/Shiro-Design-16/MEOW/releases), using the Git tag `MEOW-0.0.1`.
+MEOW 0.0.1 remains in development, with source updates on the repository's `dev` branch. The first formal Release will be created after the icon replacement and release preparation are complete.
 
-This release does not include installers. Windows, macOS, and Linux installers will be provided after MEOW has its own application identity, update signing keys, and verified build pipeline. Until then, build from source or continue using an [official Clash Verge Rev release](https://github.com/clash-verge-rev/clash-verge-rev/releases).
+The repository does not currently provide formally signed installers. Locally built macOS packages are for development testing only; official packages will follow after independent update signing and release workflows are ready.
 
 ## Features
 
@@ -48,6 +48,8 @@ MEOW currently inherits the complete Clash Verge Rev v2.5.2 feature set:
 - System proxy controls, guard mode, and `TUN` virtual network adapter support
 - Visual node and rule editors
 - WebDAV configuration backup and sync
+
+The current development branch also includes experimental macOS per-app routing. All application traffic still enters TUN; selected processes use a chosen policy, while other applications continue through the existing rules. Both TUN and Rule mode are required.
 
 For usage and troubleshooting, refer to the [Clash Verge Rev documentation](https://clash-verge-rev.github.io/). That documentation is maintained upstream, so its project names, downloads, and community links refer to Clash Verge Rev rather than MEOW.
 

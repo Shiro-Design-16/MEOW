@@ -127,6 +127,23 @@ interface IProxyProviderItem {
   }
 }
 
+interface IMacApplication {
+  name: string
+  bundleId?: string
+  appPath: string
+  executablePath: string
+  processNames: string[]
+}
+
+interface IAppRoutingRule {
+  app_name: string
+  bundle_id?: string
+  process_path?: string
+  process_names: string[]
+  policy: string
+  enabled: boolean
+}
+
 interface IRuleProviderItem {
   name: string
   behavior: string
@@ -894,6 +911,8 @@ interface IVergeConfig {
   tray_proxy_groups_display_mode?: 'default' | 'inline' | 'disable'
   tray_inline_outbound_modes?: boolean
   enable_tun_mode?: boolean
+  enable_app_routing?: boolean
+  app_routing_rules?: IAppRoutingRule[]
   enable_auto_light_weight_mode?: boolean
   auto_light_weight_minutes?: number
   enable_auto_launch?: boolean

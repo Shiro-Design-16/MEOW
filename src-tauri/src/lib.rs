@@ -144,6 +144,7 @@ mod app_init {
             cmd::get_portable_flag,
             cmd::get_network_interfaces,
             cmd::get_system_hostname,
+            cmd::list_macos_applications,
             cmd::restart_app,
             cmd::start_core,
             cmd::stop_core,

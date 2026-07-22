@@ -7,6 +7,7 @@
         "profiles": "Profiles",
         "connections": "Connections",
         "rules": "Rules",
+        "appRouting": "App Routing",
         "logs": "Logs",
         "unlock": "Test",
         "settings": "Settings"
