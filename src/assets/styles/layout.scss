@@ -108,6 +108,10 @@
   }
 }
 
+.layout.layout--rounded-window {
+  overflow: hidden;
+}
+
 .window-resize-handles {
   --resize-edge-size: 6px;
   --resize-corner-size: 12px;
@@ -204,7 +208,7 @@
       justify-content: flex-end;
       padding: 10px;
       box-sizing: border-box;
-      height: 36px;
+      height: 44px;
       border-bottom: 1px solid var(--divider-color);
 
       &-drag-region {
@@ -237,7 +241,7 @@
       justify-content: flex-start;
       padding: 10px;
       box-sizing: border-box;
-      height: 36px;
+      height: 44px;
       border-bottom: 1px solid var(--divider-color);
 
       &-drag-region {

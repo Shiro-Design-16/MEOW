@@ -1,5 +1,6 @@
 import {
   AddRounded,
+  AppsRounded,
   ArrowBackRounded,
   DeleteRounded,
   RefreshRounded,
@@ -8,6 +9,7 @@ import {
 import {
   Alert,
   Autocomplete,
+  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -18,26 +20,93 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import { convertFileSrc } from '@tauri-apps/api/core'
 import { useLockFn } from 'ahooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { closeAllConnections } from 'tauri-plugin-mihomo-api'
 
 import { BasePage, Switch } from '@/components/base'
 import { useClash } from '@/hooks/use-clash'
 import { useVerge } from '@/hooks/use-verge'
-import { calcuProxies, listMacApplications } from '@/services/cmds'
+import {
+  calcuProxies,
+  getRuntimeProxyGroupOrder,
+  listInstalledApplications,
+  resolveApplicationIcon,
+} from '@/services/cmds'
 import { showNotice } from '@/services/notice-service'
 
 const BUILTIN_POLICIES = ['DIRECT', 'REJECT']
+const iconUrlCache = new Map<string, string>()
+const iconUrlRequests = new Map<string, Promise<string | undefined>>()
+
+const loadApplicationIcon = (iconPath: string) => {
+  const cached = iconUrlCache.get(iconPath)
+  if (cached) return Promise.resolve(cached)
+
+  const pending = iconUrlRequests.get(iconPath)
+  if (pending) return pending
+
+  const request = resolveApplicationIcon(iconPath)
+    .then((resolvedPath) => {
+      if (!resolvedPath) return undefined
+      const url = convertFileSrc(resolvedPath)
+      iconUrlCache.set(iconPath, url)
+      return url
+    })
+    .catch(() => undefined)
+    .finally(() => iconUrlRequests.delete(iconPath))
+  iconUrlRequests.set(iconPath, request)
+  return request
+}
+
+const InstalledApplicationIcon = ({
+  application,
+  size,
+}: {
+  application: IInstalledApplication
+  size: number
+}) => {
+  const [source, setSource] = useState<string | undefined>(() =>
+    application.iconPath ? iconUrlCache.get(application.iconPath) : undefined,
+  )
+
+  useEffect(() => {
+    const iconPath = application.iconPath
+    if (!iconPath) return
+
+    let cancelled = false
+    void loadApplicationIcon(iconPath).then((url) => {
+      if (!cancelled) setSource(url)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [application.iconPath])
+
+  return (
+    <Avatar
+      variant="rounded"
+      src={source}
+      sx={{ width: size, height: size, flex: '0 0 auto' }}
+    >
+      <AppsRounded sx={{ fontSize: Math.round(size * 0.58) }} />
+    </Avatar>
+  )
+}
 
 const isSafeRulePart = (value: string) =>
   value.trim().length > 0 && !/[,\r\n]/u.test(value)
 
-const appKey = (app: IMacApplication) => app.bundleId || app.appPath
+const appKey = (app: IInstalledApplication) => app.bundleId || app.appPath
 const ruleKey = (rule: IAppRoutingRule) =>
   rule.bundle_id || rule.process_path || rule.app_name
 
-const toRule = (app: IMacApplication, policy: string): IAppRoutingRule => ({
+const toRule = (
+  app: IInstalledApplication,
+  policy: string,
+): IAppRoutingRule => ({
   app_name: app.name,
   bundle_id: app.bundleId,
   process_path: app.executablePath,
@@ -59,7 +128,7 @@ const AppRoutingPage = ({ onBack }: Props) => {
   const [enabled, setEnabled] = useState(
     () => verge?.enable_app_routing ?? false,
   )
-  const [applications, setApplications] = useState<IMacApplication[]>([])
+  const [applications, setApplications] = useState<IInstalledApplication[]>([])
   const [policies, setPolicies] = useState(BUILTIN_POLICIES)
   const [rules, setRules] = useState<IAppRoutingRule[]>(
     () => verge?.app_routing_rules ?? [],
@@ -73,14 +142,16 @@ const AppRoutingPage = ({ onBack }: Props) => {
   const loadOptions = useCallback(async () => {
     setScanning(true)
     try {
-      const [apps, proxyData] = await Promise.all([
-        listMacApplications(),
+      const [apps, proxyData, runtimeGroupOrder] = await Promise.all([
+        listInstalledApplications(),
         calcuProxies().catch(() => null),
+        getRuntimeProxyGroupOrder().catch(() => []),
       ])
       setApplications(apps)
-      const groupNames =
-        proxyData?.groups.map((group) => group.name).filter(isSafeRulePart) ??
-        []
+      const groupNames = [
+        ...runtimeGroupOrder,
+        ...(proxyData?.groups.map((group) => group.name) ?? []),
+      ].filter(isSafeRulePart)
       setPolicies(Array.from(new Set([...BUILTIN_POLICIES, ...groupNames])))
     } catch (error) {
       showNotice.error(error)
@@ -111,6 +182,9 @@ const AppRoutingPage = ({ onBack }: Props) => {
         enable_app_routing: enabled,
         app_routing_rules: rules,
       })
+      // Existing TCP/UDP sessions keep their original route until they close.
+      // Closing them here makes a newly saved per-app policy observable at once.
+      await closeAllConnections().catch(() => {})
       showNotice.success('settings.sections.appRouting.messages.saved')
     } catch (error) {
       showNotice.error(error)
@@ -178,7 +252,16 @@ const AppRoutingPage = ({ onBack }: Props) => {
         </Box>
       }
     >
-      <Box sx={{ width: '100%', maxWidth: 980, mx: 'auto', pb: 2 }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 980,
+          mx: 'auto',
+          px: { xs: 2, sm: 3 },
+          pb: 2,
+          boxSizing: 'border-box',
+        }}
+      >
         <Alert
           severity={
             verge?.enable_tun_mode && clash?.mode === 'rule'
@@ -241,7 +324,7 @@ const AppRoutingPage = ({ onBack }: Props) => {
                   appPath: rule.process_path ?? rule.app_name,
                   executablePath: rule.process_path ?? '',
                   processNames: rule.process_names,
-                } satisfies IMacApplication)
+                } satisfies IInstalledApplication)
               const applicationOptions = applicationsByKey.has(ruleKey(rule))
                 ? applications
                 : [selected, ...applications]
@@ -250,19 +333,12 @@ const AppRoutingPage = ({ onBack }: Props) => {
                   key={ruleKey(rule)}
                   sx={{ px: 0, gap: 1, alignItems: 'flex-start' }}
                 >
-                  <Switch
-                    sx={{ mt: 0.5 }}
-                    checked={rule.enabled}
-                    onChange={(_, checked) =>
-                      setRules((current) =>
-                        current.map((item, itemIndex) =>
-                          itemIndex === index
-                            ? { ...item, enabled: checked }
-                            : item,
-                        ),
-                      )
-                    }
-                  />
+                  <Box sx={{ mt: 0.25 }}>
+                    <InstalledApplicationIcon
+                      application={selected}
+                      size={38}
+                    />
+                  </Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Autocomplete
                       size="small"
@@ -272,6 +348,19 @@ const AppRoutingPage = ({ onBack }: Props) => {
                       isOptionEqualToValue={(option, value) =>
                         appKey(option) === appKey(value)
                       }
+                      renderOption={(props, option) => (
+                        <Box
+                          component="li"
+                          {...props}
+                          sx={{ display: 'flex', gap: 1 }}
+                        >
+                          <InstalledApplicationIcon
+                            application={option}
+                            size={28}
+                          />
+                          <Typography noWrap>{option.name}</Typography>
+                        </Box>
+                      )}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -328,6 +417,19 @@ const AppRoutingPage = ({ onBack }: Props) => {
                         ),
                       )
                     }}
+                  />
+                  <Switch
+                    sx={{ mt: 0.5 }}
+                    checked={rule.enabled}
+                    onChange={(_, checked) =>
+                      setRules((current) =>
+                        current.map((item, itemIndex) =>
+                          itemIndex === index
+                            ? { ...item, enabled: checked }
+                            : item,
+                        ),
+                      )
+                    }
                   />
                   <IconButton
                     color="error"

@@ -23,12 +23,6 @@
 > [!IMPORTANT]
 > MEOW is an unofficial independent fork of Clash Verge Rev. The current development branch now includes independently maintained experimental features. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
-## پیش‌نمایش
-
-| تاریک                               | روشن                                  |
-| ----------------------------------- | ------------------------------------- |
-| ![Dark Preview](./preview_dark.png) | ![Light Preview](./preview_light.png) |
-
 ## نصب
 
 برای دانلود فایل نصبی متناسب با پلتفرم خود، به [صفحه انتشار](https://github.com/clash-verge-rev/clash-verge-rev/releases) مراجعه کنید.<br> ما بسته‌هایی برای ویندوز (x64/x86)، لینوکس (x64/arm64) و macOS 10.15+ (اینتل/اپل) ارائه می‌دهیم.

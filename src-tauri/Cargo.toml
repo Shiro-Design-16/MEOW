@@ -1,11 +1,11 @@
 [package]
-name = "clash-verge"
+name = "meow"
 version = "0.0.1"
 description = "MEOW desktop proxy client"
-authors = ["zzzgydi", "Tunglies", "wonfen", "MystiPanda"]
+authors = ["SHIRO"]
 license = "GPL-3.0-only"
 repository = "https://github.com/Shiro-Design-16/MEOW.git"
-default-run = "clash-verge"
+default-run = "meow"
 build = "build.rs"
 edition = "2024"
 rust-version = "1.95"
@@ -43,6 +43,7 @@ tauri = { workspace = true, features = [
   "tray-icon",
   "image-ico",
   "image-png",
+  "macos-private-api",
 ] }
 parking_lot = { workspace = true }
 anyhow = { workspace = true }

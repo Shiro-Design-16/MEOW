@@ -640,7 +640,17 @@ export interface TranslationResources {
           description: string
           editor: {
             addRule: string
+            allPolicies: string
+            allTypes: string
+            duplicate: string
             empty: string
+            match: string
+            moveDown: string
+            moveUp: string
+            options: string
+            policy: string
+            searchPlaceholder: string
+            type: string
             visual: string
           }
           messages: {

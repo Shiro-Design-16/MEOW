@@ -3,7 +3,7 @@
   "id": "meow.default",
   "name": "MEOW Default",
   "version": "0.0.1",
-  "author": "MEOW Contributors",
+  "author": "SHIRO",
   "supportedModes": ["light", "dark"],
   "assets": {
     "brand": {

@@ -67,10 +67,20 @@ pub async fn build_new_window() -> Result<WebviewWindow, String> {
         _ => !matches!(detect_system_theme().ok(), Some(SystemTheme::Light)),
     };
 
-    let background_color = if prefers_dark_background {
+    let opaque_background_color = if prefers_dark_background {
         DARK_BACKGROUND_COLOR
     } else {
         LIGHT_BACKGROUND_COLOR
+    };
+    let background_color = if prefer_system_titlebar {
+        opaque_background_color
+    } else {
+        Color(
+            opaque_background_color.0,
+            opaque_background_color.1,
+            opaque_background_color.2,
+            0,
+        )
     };
 
     let initial_script = build_window_initial_script(initial_theme_mode, DARK_BACKGROUND_HEX, LIGHT_BACKGROUND_HEX);
@@ -80,9 +90,10 @@ pub async fn build_new_window() -> Result<WebviewWindow, String> {
         "main", /* the unique window label */
         tauri::WebviewUrl::App(start_page.into()),
     )
-    .title("Clash Verge")
+    .title("MEOW")
     .center()
     .decorations(prefer_system_titlebar)
+    .transparent(!prefer_system_titlebar)
     .fullscreen(false)
     .inner_size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
     .min_inner_size(MINIMAL_WIDTH, MINIMAL_HEIGHT)

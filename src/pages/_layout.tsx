@@ -47,7 +47,7 @@ import {
 import { useI18n } from '@/hooks/use-i18n'
 import { useVerge } from '@/hooks/use-verge'
 import { useVisibility } from '@/hooks/use-visibility'
-import { useWindowDecorations } from '@/hooks/use-window'
+import { useWindowControls, useWindowDecorations } from '@/hooks/use-window'
 import { useThemeMode } from '@/services/states'
 import getSystem from '@/utils/get-system'
 import BrandIcon from '@root/resources/icon.svg?react'
@@ -143,6 +143,17 @@ const Layout = () => {
 
   const windowControlsRef = useRef<any>(null)
   const { decorated } = useWindowDecorations()
+  const { maximized } = useWindowControls()
+  const roundedWindow = decorated === false && !maximized
+
+  useEffect(() => {
+    const className = 'meow-rounded-window'
+    document.documentElement.classList.toggle(className, roundedWindow)
+
+    return () => {
+      document.documentElement.classList.remove(className)
+    }
+  }, [roundedWindow])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -303,13 +314,11 @@ const Layout = () => {
           `}
       </style>
       <Paper
-        square
+        square={!roundedWindow}
         elevation={0}
-        className={`${OS} layout${navCollapsed ? ' layout--nav-collapsed' : ''}`}
-        style={{
-          borderTopLeftRadius: '0px',
-          borderTopRightRadius: '0px',
-        }}
+        className={`${OS} layout${navCollapsed ? ' layout--nav-collapsed' : ''}${
+          roundedWindow ? ' layout--rounded-window' : ''
+        }`}
         onContextMenu={(e) => {
           if (
             OS === 'windows' &&
@@ -323,11 +332,13 @@ const Layout = () => {
         }}
         sx={[
           ({ palette }) => ({ bgcolor: palette.background.paper }),
-          OS === 'linux'
+          roundedWindow
             ? {
-                borderRadius: '8px',
+                borderRadius: 'var(--window-corner-radius)',
                 width: '100vw',
                 height: '100vh',
+                border: '1px solid var(--window-border-color)',
+                boxSizing: 'border-box',
               }
             : {},
         ]}

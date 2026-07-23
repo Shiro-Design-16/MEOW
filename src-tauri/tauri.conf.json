@@ -17,9 +17,9 @@
       }
     },
     "resources": ["resources"],
-    "publisher": "MEOW Contributors",
-    "externalBin": ["sidecar/verge-mihomo", "sidecar/verge-mihomo-alpha"],
-    "copyright": "GNU General Public License v3.0",
+    "publisher": "SHIRO",
+    "externalBin": ["sidecar/meow-mihomo", "sidecar/meow-mihomo-alpha"],
+    "copyright": "Copyright © 2026 SHIRO. Based on Clash Verge Rev.",
     "category": "DeveloperTool",
     "shortDescription": "MEOW desktop proxy client",
     "createUpdaterArtifacts": false
@@ -50,6 +50,7 @@
     }
   },
   "app": {
+    "macOSPrivateApi": true,
     "security": {
       "capabilities": ["desktop-capability", "migrated"],
       "assetProtocol": {

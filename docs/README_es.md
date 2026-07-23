@@ -23,12 +23,6 @@ Una interfaz gráfica para Clash Meta construida con <a href="https://github.com
 > [!IMPORTANT]
 > MEOW is an unofficial independent fork of Clash Verge Rev. The current development branch now includes independently maintained experimental features. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
-## Vista previa
-
-| Oscuro                              | Claro                               |
-| ----------------------------------- | ----------------------------------- |
-| ![Vista oscura](./preview_dark.png) | ![Vista clara](./preview_light.png) |
-
 ## Instalación
 
 Visita la [página de lanzamientos](https://github.com/clash-verge-rev/clash-verge-rev/releases) y descarga el instalador que corresponda a tu plataforma.<br>

@@ -21,9 +21,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { BasePage } from '@/components/base'
+import { ThemeModeSwitch } from '@/components/setting/mods/theme-mode-switch'
 import { useVerge } from '@/hooks/use-verge'
 import { showNotice } from '@/services/notice-service'
+import { useThemeMode } from '@/services/states'
 import {
+  canSelectThemeMode,
+  getThemeDefinition,
   importThemePackage,
   removeThemePackage,
   useInstalledThemePackages,
@@ -34,16 +38,24 @@ const ThemeManagerPage = () => {
   const navigate = useNavigate()
   const { verge, mutateVerge, patchVerge } = useVerge()
   const themePackages = useInstalledThemePackages()
+  const renderedMode = useThemeMode()
+  const activeTheme = getThemeDefinition(verge?.active_theme)
+  const canSwitchMode = canSelectThemeMode(activeTheme)
+  const selectedMode = canSwitchMode
+    ? (verge?.theme_mode ?? 'system')
+    : activeTheme.supportedModes[0]
   const [importing, setImporting] = useState(false)
 
-  const applyTheme = async (active_theme: string) => {
-    mutateVerge({ ...verge, active_theme }, false)
+  const updateVerge = async (patch: Partial<IVergeConfig>) => {
+    mutateVerge({ ...verge, ...patch }, false)
     try {
-      await patchVerge({ active_theme })
+      await patchVerge(patch)
     } catch (error) {
       showNotice.error(error)
     }
   }
+
+  const applyTheme = (active_theme: string) => updateVerge({ active_theme })
 
   const importTheme = async () => {
     const sourceDirectory = await openDialog({
@@ -109,51 +121,67 @@ const ThemeManagerPage = () => {
           {t('rules.extensions.theme.manager.description')}
         </Typography>
 
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 1.5,
+            mb: 2,
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Box>
+            <Typography sx={{ fontWeight: 650 }}>
+              {t('rules.extensions.theme.mode')}
+            </Typography>
+            {!canSwitchMode && (
+              <Typography variant="caption" color="text.secondary">
+                {t('rules.extensions.theme.modeUnavailable')}
+              </Typography>
+            )}
+          </Box>
+          <ThemeModeSwitch
+            value={selectedMode}
+            disabled={!canSwitchMode}
+            translationPrefix="rules.extensions.theme.modes"
+            onChange={(theme_mode) => void updateVerge({ theme_mode })}
+          />
+        </Paper>
+
         <Grid container spacing={2}>
           {themePackages.map(({ theme, source, preview }) => {
             const active = verge?.active_theme === theme.id
-            const previewImages = preview.default
-              ? [preview.default]
-              : [preview.light, preview.dark].filter((image): image is string =>
-                  Boolean(image),
-                )
+            const previewImage =
+              preview.default ??
+              (renderedMode === 'dark' ? preview.dark : preview.light) ??
+              preview.light ??
+              preview.dark
 
             return (
-              <Grid key={theme.id} size={{ xs: 12, md: 6 }}>
+              <Grid key={theme.id} size={{ xs: 12, sm: 6 }}>
                 <Paper
                   variant="outlined"
                   sx={{ overflow: 'hidden', height: '100%' }}
                 >
                   <Box
+                    component="img"
+                    src={previewImage}
+                    alt={t(
+                      renderedMode === 'dark'
+                        ? 'rules.extensions.theme.manager.previewDark'
+                        : 'rules.extensions.theme.manager.previewLight',
+                    )}
                     sx={{
-                      display: 'grid',
-                      gridTemplateColumns: `repeat(${previewImages.length}, minmax(0, 1fr))`,
+                      display: 'block',
+                      width: '100%',
                       bgcolor: 'action.hover',
-                      aspectRatio:
-                        previewImages.length > 1 ? '32 / 9' : '16 / 9',
+                      aspectRatio: '16 / 9',
+                      objectFit: 'cover',
                     }}
-                  >
-                    {previewImages.map((image, index) => (
-                      <Box
-                        key={image}
-                        component="img"
-                        src={image}
-                        alt={t(
-                          index === 0 && previewImages.length > 1
-                            ? 'rules.extensions.theme.manager.previewLight'
-                            : index === 1
-                              ? 'rules.extensions.theme.manager.previewDark'
-                              : 'rules.extensions.theme.manager.preview',
-                        )}
-                        sx={{
-                          width: '100%',
-                          height: '100%',
-                          minWidth: 0,
-                          objectFit: 'cover',
-                        }}
-                      />
-                    ))}
-                  </Box>
+                  />
 
                   <Box sx={{ p: 2 }}>
                     <Box sx={{ display: 'flex', gap: 1.5 }}>

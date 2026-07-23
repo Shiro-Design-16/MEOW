@@ -492,7 +492,7 @@ pub(super) async fn start_with_existing_service(config_file: &PathBuf) -> Result
 
     let response = clash_verge_service_ipc::start_clash(&payload)
         .await
-        .context("无法连接到Clash Verge Service")?;
+        .context("无法连接到 MEOW Service")?;
 
     if response.code > 0 {
         let err_msg = response.message;
@@ -519,7 +519,7 @@ pub(super) async fn get_clash_logs_by_service() -> Result<Vec<CompactString>> {
 
     let response = clash_verge_service_ipc::get_clash_logs()
         .await
-        .context("无法连接到Clash Verge Service")?;
+        .context("无法连接到 MEOW Service")?;
 
     if response.code > 0 {
         let err_msg = response.message;
@@ -537,7 +537,7 @@ pub(super) async fn stop_core_by_service() -> Result<()> {
 
     let response = clash_verge_service_ipc::stop_clash()
         .await
-        .context("无法连接到Clash Verge Service")?;
+        .context("无法连接到 MEOW Service")?;
 
     if response.code > 0 {
         let err_msg = response.message;
@@ -715,7 +715,7 @@ mod tests {
     use std::fs;
 
     fn test_dir(name: &str) -> std::io::Result<PathBuf> {
-        let path = std::env::temp_dir().join(format!("clash-verge-service-path-test-{}-{name}", std::process::id()));
+        let path = std::env::temp_dir().join(format!("meow-service-path-test-{}-{name}", std::process::id()));
         let _ = fs::remove_dir_all(&path);
         fs::create_dir_all(&path)?;
         Ok(path)
@@ -723,37 +723,32 @@ mod tests {
 
     #[test]
     fn detects_app_translocation_paths() {
-        let path = Path::new(
-            "/private/var/folders/example/T/AppTranslocation/123/d/Clash Verge.app/Contents/MacOS/Clash Verge",
-        );
+        let path = Path::new("/private/var/folders/example/T/AppTranslocation/123/d/MEOW.app/Contents/MacOS/meow");
 
         assert!(is_macos_app_translocated(path));
     }
 
     #[test]
     fn extracts_app_bundle_name_from_executable_path() {
-        let path = Path::new("/Applications/Clash Verge.app/Contents/MacOS/Clash Verge");
+        let path = Path::new("/Applications/MEOW.app/Contents/MacOS/meow");
 
         assert_eq!(
             macos_app_bundle_name(path).as_deref(),
-            Some(std::ffi::OsStr::new("Clash Verge.app"))
+            Some(std::ffi::OsStr::new("MEOW.app"))
         );
     }
 
     #[test]
     fn resolves_existing_core_path_from_install_roots() -> std::io::Result<()> {
         let root = test_dir("resolve-existing-core-path")?;
-        let core_dir = root.join("Clash Verge.app").join("Contents").join("MacOS");
-        let core_path = core_dir.join("verge-mihomo");
+        let core_dir = root.join("MEOW.app").join("Contents").join("MacOS");
+        let core_path = core_dir.join("meow-mihomo");
 
         fs::create_dir_all(&core_dir)?;
         fs::write(&core_path, b"")?;
 
-        let resolved = macos_core_path_in_install_roots(
-            std::ffi::OsStr::new("Clash Verge.app"),
-            "verge-mihomo",
-            [root.as_path()],
-        );
+        let resolved =
+            macos_core_path_in_install_roots(std::ffi::OsStr::new("MEOW.app"), "meow-mihomo", [root.as_path()]);
 
         assert_eq!(resolved, Some(core_path));
 

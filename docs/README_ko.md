@@ -23,12 +23,6 @@
 > [!IMPORTANT]
 > MEOW is an unofficial independent fork of Clash Verge Rev. The current development branch now includes independently maintained experimental features. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
-## 미리보기
-
-| 다크                                 | 라이트                                  |
-| ------------------------------------ | --------------------------------------- |
-| ![다크 미리보기](./preview_dark.png) | ![라이트 미리보기](./preview_light.png) |
-
 ## 설치
 
 [릴리스 페이지](https://github.com/clash-verge-rev/clash-verge-rev/releases)에서 사용 중인 플랫폼에 맞는 설치 프로그램을 다운로드하세요.<br>

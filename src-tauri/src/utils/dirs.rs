@@ -215,6 +215,8 @@ pub fn ensure_mihomo_safe_dir() -> Option<PathBuf> {
 #[cfg(unix)]
 pub fn ipc_path() -> Result<PathBuf> {
     ensure_mihomo_safe_dir()
+        // Keep the service IPC endpoint compatible with the privileged service.
+        // This is an internal protocol path, not a user-facing process name.
         .map(|base_dir| base_dir.join("verge").join("verge-mihomo.sock"))
         .or_else(|| {
             app_home_dir()
@@ -226,7 +228,7 @@ pub fn ipc_path() -> Result<PathBuf> {
 
 #[cfg(target_os = "windows")]
 pub fn ipc_path() -> Result<PathBuf> {
-    Ok(PathBuf::from(r"\\.\pipe\verge-mihomo"))
+    Ok(PathBuf::from(r"\\.\pipe\meow-mihomo"))
 }
 #[async_trait]
 pub trait PathBufExec {

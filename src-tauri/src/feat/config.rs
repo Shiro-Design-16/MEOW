@@ -265,10 +265,7 @@ pub async fn patch_verge(patch: &IVerge, not_save_file: bool) -> Result<()> {
 
     let update_flags = determine_update_flags(patch);
     logging!(debug, Type::Setup, "Determined update flags: {:?}", update_flags);
-    let process_flag_result: std::result::Result<(), anyhow::Error> = {
-        process_terminated_flags(update_flags, patch).await?;
-        Ok(())
-    };
+    let process_flag_result = process_terminated_flags(update_flags, patch).await;
 
     if let Err(err) = process_flag_result {
         Config::verge().await.discard();

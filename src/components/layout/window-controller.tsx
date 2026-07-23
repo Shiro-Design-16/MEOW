@@ -105,6 +105,9 @@ export const WindowControls = forwardRef(function WindowControls(props, ref) {
         alignItems: 'center',
         '> button': {
           cursor: 'default',
+          width: 24,
+          height: 24,
+          p: 0,
         },
       }}
     >

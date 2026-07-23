@@ -137,7 +137,7 @@ export const useCustomTheme = () => {
       ::-webkit-scrollbar-thumb:hover {
         background-color: ${chrome.scrollbarThumbHover};
       }
-      body { background-color: var(--background-color); }
+      body { background-color: transparent; }
       .MuiPaper-root { border-color: var(--window-border-color) !important; }
       .MuiDialog-paper { background-color: ${palette.dialogBackground} !important; }
       * { outline: none !important; box-shadow: none !important; }

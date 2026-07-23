@@ -289,7 +289,7 @@ pub struct IVergeTestItem {
 
 impl IVerge {
     /// 有效的clash核心名称
-    pub const VALID_CLASH_CORES: &'static [&'static str] = &["verge-mihomo", "verge-mihomo-alpha"];
+    pub const VALID_CLASH_CORES: &'static [&'static str] = &["meow-mihomo", "meow-mihomo-alpha"];
 
     /// 验证并修正配置文件中的clash_core值
     pub async fn validate_and_fix_config() -> Result<()> {
@@ -303,30 +303,46 @@ impl IVerge {
 
         if let Some(ref core) = config.clash_core {
             let core_str = core.trim();
-            if core_str.is_empty() || !Self::VALID_CLASH_CORES.contains(&core_str) {
+            let migrated_core = match core_str {
+                "verge-mihomo" => Some("meow-mihomo"),
+                "verge-mihomo-alpha" => Some("meow-mihomo-alpha"),
+                _ => None,
+            };
+
+            if let Some(migrated_core) = migrated_core {
+                logging!(
+                    info,
+                    Type::Config,
+                    "正在将旧的clash_core配置 '{}' 迁移为 '{}'",
+                    core,
+                    migrated_core
+                );
+                config.clash_core = Some(migrated_core.into());
+                needs_fix = true;
+            } else if core_str.is_empty() || !Self::VALID_CLASH_CORES.contains(&core_str) {
                 logging!(
                     warn,
                     Type::Config,
-                    "启动时发现无效的clash_core配置: '{}', 将自动修正为 'verge-mihomo'",
+                    "启动时发现无效的clash_core配置: '{}', 将自动修正为 'meow-mihomo'",
                     core
                 );
-                config.clash_core = Some("verge-mihomo".into());
+                config.clash_core = Some("meow-mihomo".into());
                 needs_fix = true;
             }
         } else {
             logging!(
                 info,
                 Type::Config,
-                "启动时发现未配置clash_core, 将设置为默认值 'verge-mihomo'"
+                "启动时发现未配置clash_core, 将设置为默认值 'meow-mihomo'"
             );
-            config.clash_core = Some("verge-mihomo".into());
+            config.clash_core = Some("meow-mihomo".into());
             needs_fix = true;
         }
 
         // 修正后保存配置
         if needs_fix {
             logging!(info, Type::Config, "正在保存修正后的配置文件...");
-            help::save_yaml(&config_path, &config, Some("# Clash Verge Config")).await?;
+            help::save_yaml(&config_path, &config, Some("# MEOW Config")).await?;
             logging!(info, Type::Config, "配置文件修正完成，需要重新加载配置");
 
             Self::reload_config_after_fix(config).await?;
@@ -356,7 +372,7 @@ impl IVerge {
     }
 
     pub fn get_valid_clash_core(&self) -> String {
-        self.clash_core.clone().unwrap_or_else(|| "verge-mihomo".into())
+        self.clash_core.clone().unwrap_or_else(|| "meow-mihomo".into())
     }
 
     pub async fn new() -> Self {
@@ -387,7 +403,7 @@ impl IVerge {
         Self {
             app_log_max_size: Some(128),
             app_log_max_count: Some(8),
-            clash_core: Some("verge-mihomo".into()),
+            clash_core: Some("meow-mihomo".into()),
             language: Some(clash_verge_i18n::system_language().into()),
             theme_mode: Some("system".into()),
             active_theme: Some("meow.default".into()),
@@ -458,7 +474,7 @@ impl IVerge {
 
     /// Save IVerge App Config
     pub async fn save_file(&self) -> Result<()> {
-        help::save_yaml(&dirs::verge_path()?, &self, Some("# Clash Verge Config")).await
+        help::save_yaml(&dirs::verge_path()?, &self, Some("# MEOW Config")).await
     }
 
     /// patch verge config

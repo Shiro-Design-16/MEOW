@@ -294,8 +294,8 @@ function clashMetaAlpha() {
   const isWin = platform === 'win32'
   const urlExt = isWin ? 'zip' : 'gz'
   return {
-    name: 'verge-mihomo-alpha',
-    targetFile: `verge-mihomo-alpha-${SIDECAR_HOST}${isWin ? '.exe' : ''}`,
+    name: 'meow-mihomo-alpha',
+    targetFile: `meow-mihomo-alpha-${SIDECAR_HOST}${isWin ? '.exe' : ''}`,
     exeFile: `${name}${isWin ? '.exe' : ''}`,
     zipFile: `${name}-${META_ALPHA_VERSION}.${urlExt}`,
     downloadURL: `${META_ALPHA_URL_PREFIX}/${name}-${META_ALPHA_VERSION}.${urlExt}`,
@@ -307,8 +307,8 @@ function clashMeta() {
   const isWin = platform === 'win32'
   const urlExt = isWin ? 'zip' : 'gz'
   return {
-    name: 'verge-mihomo',
-    targetFile: `verge-mihomo-${SIDECAR_HOST}${isWin ? '.exe' : ''}`,
+    name: 'meow-mihomo',
+    targetFile: `meow-mihomo-${SIDECAR_HOST}${isWin ? '.exe' : ''}`,
     exeFile: `${name}${isWin ? '.exe' : ''}`,
     zipFile: `${name}-${META_VERSION}.${urlExt}`,
     downloadURL: `${META_URL_PREFIX}/${META_VERSION}/${name}-${META_VERSION}.${urlExt}`,
@@ -464,6 +464,18 @@ async function resolveSidecarOfflineFirst(name, loadVersion, createInfo) {
     SIDECAR_DIR,
     `${name}-${SIDECAR_HOST}${extension}`,
   )
+  const legacyName = name.replace(/^meow-/, 'verge-')
+  const legacyPath = path.join(
+    SIDECAR_DIR,
+    `${legacyName}-${SIDECAR_HOST}${extension}`,
+  )
+
+  if (!fs.existsSync(targetPath) && fs.existsSync(legacyPath)) {
+    await fsp.rename(legacyPath, targetPath)
+    if (platform !== 'win32') await fsp.chmod(targetPath, 0o755)
+    log_success(`Migrated legacy sidecar "${legacyName}" to "${name}"`)
+  }
+
   if (!FORCE && fs.existsSync(targetPath)) {
     log_success(`"${name}" already exists, skipping version check`)
     return
@@ -767,20 +779,20 @@ const resolveUnSetDnsScript = () =>
 // =======================
 const tasks = [
   {
-    name: 'verge-mihomo-alpha',
+    name: 'meow-mihomo-alpha',
     func: () =>
       resolveSidecarOfflineFirst(
-        'verge-mihomo-alpha',
+        'meow-mihomo-alpha',
         getLatestAlphaVersion,
         clashMetaAlpha,
       ),
     retry: 5,
   },
   {
-    name: 'verge-mihomo',
+    name: 'meow-mihomo',
     func: () =>
       resolveSidecarOfflineFirst(
-        'verge-mihomo',
+        'meow-mihomo',
         getLatestReleaseVersion,
         clashMeta,
       ),

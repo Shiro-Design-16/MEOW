@@ -23,12 +23,6 @@ Clash Meta GUI базируется на <a href="https://github.com/tauri-apps/
 > [!IMPORTANT]
 > MEOW is an unofficial independent fork of Clash Verge Rev. The current development branch now includes independently maintained experimental features. This translation is inherited from upstream and may lag behind the primary [Chinese](../README.md) and [English](./README_en.md) pages. MEOW-specific issues belong in the [MEOW repository](https://github.com/Shiro-Design-16/MEOW/issues), not in upstream support channels.
 
-## Предпросмотр
-
-| Тёмная тема                        | Светлая тема                         |
-| ---------------------------------- | ------------------------------------ |
-| ![Тёмная тема](./preview_dark.png) | ![Светлая тема](./preview_light.png) |
-
 ## Установка
 
 Пожалуйста, перейдите на страницу релизов, чтобы скачать соответствующий установочный пакет: [Страница релизов](https://github.com/clash-verge-rev/clash-verge-rev/releases)<br>

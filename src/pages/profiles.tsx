@@ -23,7 +23,6 @@ import {
   LocalFireDepartmentRounded,
   RefreshRounded,
   TextSnippetOutlined,
-  UploadFileRounded,
 } from '@mui/icons-material'
 import { Box, Button, Grid, IconButton, Stack } from '@mui/material'
 import { listen, TauriEvent } from '@tauri-apps/api/event'
@@ -984,9 +983,14 @@ const ProfilePage = () => {
         <Button
           variant="outlined"
           size="small"
-          startIcon={<UploadFileRounded />}
           disabled={loading}
-          sx={{ borderRadius: '6px', whiteSpace: 'nowrap' }}
+          sx={{
+            borderRadius: '6px',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            minWidth: 'auto',
+            px: 1.25,
+          }}
           onClick={() => void onImportFile()}
         >
           {t('profiles.page.actions.importFile')}

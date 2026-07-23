@@ -146,7 +146,8 @@ mod app_init {
             cmd::get_portable_flag,
             cmd::get_network_interfaces,
             cmd::get_system_hostname,
-            cmd::list_macos_applications,
+            cmd::list_installed_applications,
+            cmd::resolve_application_icon,
             cmd::create_rule_source,
             cmd::import_rule_source,
             cmd::read_rule_source_file,
@@ -247,7 +248,7 @@ pub fn run() {
                     .map(|s| (*s).to_string())
                     .or_else(|| panic.downcast_ref::<String>().cloned())
                     .unwrap_or_else(|| "unknown panic payload".to_string());
-                eprintln!("[clash-verge] panic during app setup ({stage}), continuing in degraded mode: {msg}");
+                eprintln!("[meow] panic during app setup ({stage}), continuing in degraded mode: {msg}");
                 logging!(
                     error,
                     Type::Setup,
@@ -327,7 +328,7 @@ pub fn run() {
 
             #[cfg(target_os = "macos")]
             if let Some(window) = _app_handle.get_webview_window("main") {
-                let _ = window.set_title("Clash Verge");
+                let _ = window.set_title("MEOW");
             }
         }
 

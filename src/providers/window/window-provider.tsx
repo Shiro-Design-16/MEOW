@@ -80,7 +80,13 @@ export const WindowProvider: React.FC<{ children: React.ReactNode }> = ({
   )
 
   useEffect(() => {
-    refreshDecorated()
+    void refreshDecorated()
+    void currentWindow
+      .isMaximized()
+      .then(setMaximized)
+      .catch((error) =>
+        console.warn('[WindowProvider] 读取最大化状态失败:', error),
+      )
     currentWindow.setMinimizable?.(true)
   }, [currentWindow, refreshDecorated])
 

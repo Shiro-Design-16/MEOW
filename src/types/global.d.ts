@@ -127,12 +127,13 @@ interface IProxyProviderItem {
   }
 }
 
-interface IMacApplication {
+interface IInstalledApplication {
   name: string
   bundleId?: string
   appPath: string
   executablePath: string
   processNames: string[]
+  iconPath?: string
 }
 
 interface IAppRoutingRule {

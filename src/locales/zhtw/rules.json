@@ -49,7 +49,17 @@
       "editor": {
         "visual": "Visual",
         "empty": "This source has no inline rules yet.",
-        "addRule": "Add Rule"
+        "addRule": "Add Rule",
+        "searchPlaceholder": "Search rules",
+        "allTypes": "All types",
+        "allPolicies": "All policies",
+        "type": "Type",
+        "match": "Match",
+        "policy": "Policy",
+        "options": "Options",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "duplicate": "Duplicate"
       }
     },
     "legacy": {

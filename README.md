@@ -21,21 +21,13 @@
 </p>
 
 > [!IMPORTANT]
-> MEOW 是 Clash Verge Rev 的非官方 fork。`MEOW-0.0.1` 基线仅调整品牌与项目声明；当前开发分支已开始加入独立维护的实验功能。MEOW 与 Clash Verge、Clash Verge Rev 及其维护者不存在官方隶属或背书关系；MEOW 的问题请提交至 [MEOW 仓库](https://github.com/Shiro-Design-16/MEOW/issues)，请勿向上游项目反馈仅在 MEOW 中出现的问题。
-
-## 预览
-
-| 深色模式                         | 浅色模式                          |
-| -------------------------------- | --------------------------------- |
-| ![深色预览](./docs/preview_dark.png) | ![浅色预览](./docs/preview_light.png) |
-
-> 当前截图与图标可能仍包含上游视觉元素，将随 MEOW 品牌设计逐步更新。
+> MEOW 是 Clash Verge Rev 的非官方 fork。MEOW 0.0.1 是项目的第一个公开版本，包含品牌调整、界面重构与实验功能。MEOW 与 Clash Verge、Clash Verge Rev 及其维护者不存在官方隶属或背书关系；MEOW 的问题请提交至 [MEOW 仓库](https://github.com/Shiro-Design-16/MEOW/issues)，请勿向上游项目反馈仅在 MEOW 中出现的问题。
 
 ## 安装
 
-MEOW 0.0.1 当前仍处于开发阶段，源码更新保存在仓库的 `dev` 分支；首个正式 Release 将在图标替换和发布准备完成后创建。
+请从 [MEOW 0.0.1 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.1) 下载适合系统与处理器架构的安装包。当前提供 macOS 和 Windows 的 ARM64、x86_64 版本。
 
-仓库目前不提供正式签名的安装包。本地生成的 macOS 包仅用于开发测试；正式安装包将在独立更新签名和发布流程准备完成后提供。
+当前安装包尚未进行 Apple 公证或商业代码签名，macOS Gatekeeper 与 Windows SmartScreen 可能显示安全提醒。
 
 ## 功能
 
@@ -43,13 +35,13 @@ MEOW 当前完整继承 Clash Verge Rev v2.5.2 的功能：
 
 - 基于 Rust 和 Tauri 2
 - 内置 [Clash.Meta（mihomo）](https://github.com/MetaCubeX/mihomo) 内核，并支持切换 `Alpha` 版本内核
-- 自定义主题颜色、代理组/托盘图标及 `CSS Injection`
+- 主题包选择、代理组图标及 `CSS Injection`
 - 配置文件管理和增强（Merge 和 Script），以及配置文件语法提示
 - 系统代理、守卫和 `TUN`（虚拟网卡）模式
 - 可视化节点与规则编辑
 - WebDAV 配置备份和同步
 
-当前开发分支还包含实验性的 macOS 按应用路由：所有应用流量仍进入 TUN，选定应用按进程匹配到指定策略，其他应用继续执行原有规则。该功能要求同时开启 TUN 和规则模式。
+MEOW 0.0.1 还包含实验性的跨平台按应用路由：所有应用流量仍进入 TUN，选定应用按进程匹配到指定策略，其他应用继续执行原有规则。该功能要求同时开启 TUN 和规则模式；当前提供 macOS 与 Windows 安装包，Linux 版本将在后续完成验证后发布。
 
 功能使用与常见问题可参考 [Clash Verge Rev 文档](https://clash-verge-rev.github.io/)。请注意，该文档由上游维护，其中的项目名称、下载地址和社区入口均指向上游，而非 MEOW。
 
@@ -68,6 +60,8 @@ pnpm dev
 欢迎提交 Issue 和 Pull Request。当前初始化阶段以品牌调整为主；后续涉及功能行为的改动应说明必要性及其与上游同步策略。
 
 ## 来源与致谢
+
+MEOW 当前作者为 **SHIRO**。在 MEOW 出现新的实际贡献者前，项目元数据不使用笼统的“MEOW Contributors”署名。
 
 MEOW 基于 [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev)，后者延续自 [Clash Verge](https://github.com/zzzgydi/clash-verge)。上游版本历史保留在 [Changelog.md](./Changelog.md) 和 [docs/Changelog.history.md](./docs/Changelog.history.md) 中。
 

@@ -49,7 +49,17 @@
       "editor": {
         "visual": "可视化",
         "empty": "这个规则源还没有行内规则。",
-        "addRule": "添加规则"
+        "addRule": "添加规则",
+        "searchPlaceholder": "搜索规则",
+        "allTypes": "全部类型",
+        "allPolicies": "全部策略",
+        "type": "类型",
+        "match": "匹配内容",
+        "policy": "策略",
+        "options": "附加选项",
+        "moveUp": "上移",
+        "moveDown": "下移",
+        "duplicate": "复制"
       }
     },
     "legacy": {

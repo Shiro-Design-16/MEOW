@@ -37,6 +37,31 @@ const renderSvg = (source, target, width) => {
   writeFileSync(target, renderer.render().asPng())
 }
 
+const setMacRetinaDpi = (target) => {
+  if (process.platform !== 'darwin') return
+
+  const result = spawnSync(
+    'sips',
+    [
+      '--setProperty',
+      'dpiWidth',
+      '144',
+      '--setProperty',
+      'dpiHeight',
+      '144',
+      target,
+    ],
+    { encoding: 'utf8', stdio: 'pipe' },
+  )
+  if (result.status !== 0) {
+    throw new Error(
+      result.stderr ||
+        result.stdout ||
+        'Failed to set Retina DMG background DPI',
+    )
+  }
+}
+
 const walkFiles = (directory) =>
   readdirSync(directory).flatMap((name) => {
     const file = path.join(directory, name)
@@ -284,22 +309,34 @@ const generateApplicationIcons = () => {
     appPng,
     1024,
   )
+  const dmgBackground = path.join(appDir, 'app-dmg-background.png')
   renderSvg(
     path.join(resourcesDir, 'application', 'app-dmg-background.svg'),
-    path.join(appDir, 'app-dmg-background.png'),
-    660,
+    dmgBackground,
+    1320,
   )
+  setMacRetinaDpi(dmgBackground)
 
-  const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
-  const result = spawnSync(
-    pnpm,
-    ['exec', 'tauri', 'icon', appPng, '-o', iconOutput],
-    {
-      cwd: projectRoot,
-      encoding: 'utf8',
-      stdio: 'pipe',
-    },
+  const localTauri = path.join(
+    projectRoot,
+    'node_modules',
+    '.bin',
+    process.platform === 'win32' ? 'tauri.cmd' : 'tauri',
   )
+  const useLocalTauri = existsSync(localTauri)
+  const command = useLocalTauri
+    ? localTauri
+    : process.platform === 'win32'
+      ? 'pnpm.cmd'
+      : 'pnpm'
+  const args = useLocalTauri
+    ? ['icon', appPng, '-o', iconOutput]
+    : ['exec', 'tauri', 'icon', appPng, '-o', iconOutput]
+  const result = spawnSync(command, args, {
+    cwd: projectRoot,
+    encoding: 'utf8',
+    stdio: 'pipe',
+  })
   if (result.status !== 0) {
     throw new Error(
       result.stderr || result.stdout || 'Tauri icon generation failed',

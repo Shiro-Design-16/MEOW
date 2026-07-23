@@ -23,6 +23,7 @@ body {
   --background-color: #f5f5f5;
   --background-color-alpha: rgba(24, 103, 192, 0.1);
   --border-radius: 8px;
+  --window-corner-radius: 23px;
 }
 
 ::selection {
@@ -45,6 +46,25 @@ body {
 
 body {
   overflow: hidden;
+  background: transparent;
+}
+
+html.meow-rounded-window {
+  body,
+  #root,
+  .MuiModal-root {
+    border-radius: var(--window-corner-radius);
+  }
+
+  body,
+  #root {
+    overflow: hidden;
+  }
+
+  .MuiModal-root {
+    overflow: hidden;
+    clip-path: inset(0 round var(--window-corner-radius));
+  }
 }
 
 // @media (prefers-color-scheme: dark) {

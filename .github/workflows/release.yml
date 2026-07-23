@@ -1,4 +1,4 @@
-name: MEOW Source Release
+name: MEOW Release
 
 on:
   push:
@@ -12,10 +12,17 @@ concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: false
 
+env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: short
+  HUSKY: 0
+
 jobs:
-  release:
-    name: Publish source release
+  validate:
+    name: Validate release
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout repository
@@ -24,6 +31,7 @@ jobs:
           fetch-depth: 0
 
       - name: Validate tag and version
+        id: version
         shell: bash
         run: |
           VERSION=$(jq -r '.version' package.json)
@@ -39,24 +47,151 @@ jobs:
             exit 1
           fi
 
-          echo "VERSION=${VERSION}" >> "${GITHUB_ENV}"
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    name: Build ${{ matrix.id }}
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: macos-arm64
+            os: macos-15
+            target: aarch64-apple-darwin
+            bundle: dmg
+            output_glob: target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+            asset_suffix: macos_arm64.dmg
+          - id: macos-x86_64
+            os: macos-15-intel
+            target: x86_64-apple-darwin
+            bundle: dmg
+            output_glob: target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+            asset_suffix: macos_x86_64.dmg
+          - id: windows-arm64
+            os: windows-latest
+            target: aarch64-pc-windows-msvc
+            bundle: nsis
+            output_glob: target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe
+            asset_suffix: windows_arm64-setup.exe
+          - id: windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundle: nsis
+            output_glob: target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            asset_suffix: windows_x86_64-setup.exe
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.18.0'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download target dependencies
+        run: pnpm run prebuild ${{ matrix.target }}
+
+      - name: Build installer
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+        run: pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundle }}
+
+      - name: Stage release asset
+        id: stage
+        shell: pwsh
+        run: |
+          $matches = @(Get-ChildItem -Path "${{ matrix.output_glob }}" -File)
+          if ($matches.Count -ne 1) {
+            throw "Expected exactly one installer, found $($matches.Count)"
+          }
+
+          $assetName = "MEOW_${{ needs.validate.outputs.version }}_${{ matrix.asset_suffix }}"
+          New-Item -ItemType Directory -Path "release-assets" -Force | Out-Null
+          $assetPath = Join-Path "release-assets" $assetName
+          Copy-Item -Path $matches[0].FullName -Destination $assetPath
+          "asset_path=$((Resolve-Path $assetPath).Path)" >> $env:GITHUB_OUTPUT
+
+      - name: Upload release asset
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ matrix.id }}
+          path: ${{ steps.stage.outputs.asset_path }}
+          if-no-files-found: error
+
+  release:
+    name: Publish MEOW ${{ needs.validate.outputs.version }}
+    needs:
+      - validate
+      - build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download release assets
+        uses: actions/download-artifact@v8
+        with:
+          pattern: release-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Verify release assets
+        shell: bash
+        run: |
+          mapfile -t ASSETS < <(find release-assets -maxdepth 1 -type f | sort)
+          if [ "${#ASSETS[@]}" -ne 4 ]; then
+            printf 'Expected exactly four release assets, found %s:\n' "${#ASSETS[@]}"
+            printf '%s\n' "${ASSETS[@]}"
+            exit 1
+          fi
+
+          printf 'Release assets:\n'
+          printf '%s\n' "${ASSETS[@]}"
+          sha256sum "${ASSETS[@]}"
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          name: 'MEOW ${{ env.VERSION }}'
+          name: 'MEOW ${{ needs.validate.outputs.version }}'
           body: |
             MEOW 的第一个公开版本。
 
-            此版本建立 MEOW 自己的版本体系和项目声明，功能基线继承自 Clash Verge Rev v2.5.2。当前仅包含品牌与仓库层面的初始化调整，没有引入独立功能变更。
+            此版本建立 MEOW 自己的品牌、资源与主题体系，并在 Clash Verge Rev v2.5.2 基线上加入规则源管理、可视化规则编辑、实验性按应用路由、本地订阅导入和主题包管理等功能。
 
-            本次为源码 Release。Windows、macOS 和 Linux 安装包将在 MEOW 完成独立应用标识、更新签名和构建流程后提供。
+            本次提供以下四种安装包：
+
+            - macOS ARM64
+            - macOS x86_64
+            - Windows ARM64
+            - Windows x86_64
+
+            当前安装包尚未进行 Apple 公证或商业代码签名，macOS Gatekeeper 与 Windows SmartScreen 可能显示安全提醒。
 
             ---
 
-            This is the first public MEOW release. It establishes MEOW's own versioning and project identity while retaining the Clash Verge Rev v2.5.2 functional baseline. No independent application behavior changes are included.
+            This is the first public MEOW release. It establishes MEOW's own branding, resource and theme system, and adds rule-source management, a visual rule editor, experimental per-application routing, local profile import, and theme-package management on top of the Clash Verge Rev v2.5.2 baseline.
 
-            This is a source-only release. Installers will be provided after MEOW has its own application identity, update signing keys, and verified build pipeline.
+            Installers are provided for macOS and Windows on both ARM64 and x86_64. These builds are not yet notarized or commercially code-signed, so macOS Gatekeeper or Windows SmartScreen may display a warning.
+          files: |
+            release-assets/*.dmg
+            release-assets/*.exe
+          fail_on_unmatched_files: true
           generate_release_notes: true
           draft: false
           prerelease: false

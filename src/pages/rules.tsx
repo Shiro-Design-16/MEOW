@@ -81,7 +81,6 @@ import {
 } from '@/services/cmds'
 import { showNotice } from '@/services/notice-service'
 import { useQuery } from '@/services/query-client'
-import getSystem from '@/utils/get-system'
 
 import AppRoutingPage from './app-routing'
 
@@ -301,7 +300,6 @@ const RulesPage = () => {
   const [createOpen, setCreateOpen] = useState(false)
   const [newSourceName, setNewSourceName] = useState('')
   const sources = verge?.rule_sources ?? EMPTY_RULE_SOURCES
-  const isMac = getSystem() === 'macos'
   const { data: chainLogs = {} } = useQuery({
     queryKey: ['getRuntimeLogs'],
     queryFn: getRuntimeLogs,
@@ -512,59 +510,63 @@ const RulesPage = () => {
       {view === 'preview' ? (
         <EffectiveRules />
       ) : (
-        <Box sx={{ width: '100%', maxWidth: 980, mx: 'auto', p: 1.5, pb: 3 }}>
-          {isMac && (
-            <Paper
-              variant="outlined"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                p: 1.5,
-                mb: 2,
-              }}
-            >
-              <AppsOutlined color="primary" />
-              <Box sx={{ flex: 1 }}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignItems: 'center' }}
-                >
-                  <Typography sx={{ fontWeight: 700 }}>
-                    {t('rules.page.appRouting.title')}
-                  </Typography>
-                  <Chip
-                    size="small"
-                    color="primary"
-                    label={t('rules.page.appRouting.highest')}
-                  />
-                  <Chip
-                    size="small"
-                    color={verge?.enable_app_routing ? 'success' : 'default'}
-                    label={
-                      verge?.enable_app_routing
-                        ? t('rules.page.sources.status.enabled')
-                        : t('rules.page.sources.status.disabled')
-                    }
-                  />
-                </Stack>
-                <Typography variant="body2" color="text.secondary">
-                  {t('rules.page.appRouting.description', {
-                    count:
-                      verge?.app_routing_rules?.filter((rule) => rule.enabled)
-                        .length ?? 0,
-                  })}
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 980,
+            mx: 'auto',
+            px: { xs: 2, sm: 3 },
+            pt: 1.5,
+            pb: 3,
+            boxSizing: 'border-box',
+          }}
+        >
+          <Paper
+            variant="outlined"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              p: 1.5,
+              mb: 2,
+            }}
+          >
+            <AppsOutlined color="primary" />
+            <Box sx={{ flex: 1 }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Typography sx={{ fontWeight: 700 }}>
+                  {t('rules.page.appRouting.title')}
                 </Typography>
-              </Box>
-              <Button
-                startIcon={<TuneRounded />}
-                onClick={() => setView('app-routing')}
-              >
-                {t('rules.page.appRouting.configure')}
-              </Button>
-            </Paper>
-          )}
+                <Chip
+                  size="small"
+                  color="primary"
+                  label={t('rules.page.appRouting.highest')}
+                />
+                <Chip
+                  size="small"
+                  color={verge?.enable_app_routing ? 'success' : 'default'}
+                  label={
+                    verge?.enable_app_routing
+                      ? t('rules.page.sources.status.enabled')
+                      : t('rules.page.sources.status.disabled')
+                  }
+                />
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                {t('rules.page.appRouting.description', {
+                  count:
+                    verge?.app_routing_rules?.filter((rule) => rule.enabled)
+                      .length ?? 0,
+                })}
+              </Typography>
+            </Box>
+            <Button
+              startIcon={<TuneRounded />}
+              onClick={() => setView('app-routing')}
+            >
+              {t('rules.page.appRouting.configure')}
+            </Button>
+          </Paper>
 
           <Stack
             direction={{ xs: 'column', sm: 'row' }}

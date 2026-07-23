@@ -398,8 +398,12 @@ export async function getSystemHostname() {
   return invoke<string>('get_system_hostname')
 }
 
-export async function listMacApplications() {
-  return invoke<IMacApplication[]>('list_macos_applications')
+export async function listInstalledApplications() {
+  return invoke<IInstalledApplication[]>('list_installed_applications')
+}
+
+export async function resolveApplicationIcon(iconPath: string) {
+  return invoke<string | null>('resolve_application_icon', { iconPath })
 }
 
 export async function createRuleSource(name: string) {
