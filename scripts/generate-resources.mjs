@@ -320,23 +320,22 @@ const generateApplicationIcons = () => {
   const localTauri = path.join(
     projectRoot,
     'node_modules',
-    '.bin',
-    process.platform === 'win32' ? 'tauri.cmd' : 'tauri',
+    '@tauri-apps',
+    'cli',
+    'tauri.js',
   )
-  const useLocalTauri = existsSync(localTauri)
-  const command = useLocalTauri
-    ? localTauri
-    : process.platform === 'win32'
-      ? 'pnpm.cmd'
-      : 'pnpm'
-  const args = useLocalTauri
-    ? ['icon', appPng, '-o', iconOutput]
-    : ['exec', 'tauri', 'icon', appPng, '-o', iconOutput]
-  const result = spawnSync(command, args, {
-    cwd: projectRoot,
-    encoding: 'utf8',
-    stdio: 'pipe',
-  })
+  if (!existsSync(localTauri)) {
+    throw new Error('Local Tauri CLI is missing; run pnpm install first')
+  }
+  const result = spawnSync(
+    process.execPath,
+    [localTauri, 'icon', appPng, '-o', iconOutput],
+    {
+      cwd: projectRoot,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    },
+  )
   if (result.status !== 0) {
     throw new Error(
       result.stderr || result.stdout || 'Tauri icon generation failed',
