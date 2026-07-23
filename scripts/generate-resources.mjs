@@ -203,7 +203,7 @@ const validateTheme = () => {
   })
 
   for (const file of walkFiles(resourcesDir)) {
-    const relative = path.relative(resourcesDir, file)
+    const relative = path.relative(resourcesDir, file).split(path.sep).join('/')
     if (path.basename(file) === '.DS_Store') continue
     const extension = path.extname(file).toLowerCase()
     const allowedPreview =
