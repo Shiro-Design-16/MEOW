@@ -10,6 +10,7 @@
     "dev:trace": "cross-env RUST_BACKTRACE=full RUSTFLAGS=\"--cfg tokio_unstable\" tauri dev -f verge-dev tokio-trace",
     "dev:tauri": "cross-env RUST_BACKTRACE=full tauri dev -f tauri-dev",
     "build": "cross-env NODE_OPTIONS='--max-old-space-size=4096' tauri build",
+    "build:installer": "node scripts/build-installer.mjs",
     "build:dmg:no-finder": "node scripts/build-dmg-no-finder.mjs",
     "build:fast": "cross-env NODE_OPTIONS='--max-old-space-size=4096' tauri build -- --profile fast-release",
     "tauri": "tauri",

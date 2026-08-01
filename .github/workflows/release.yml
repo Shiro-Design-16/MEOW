@@ -1,4 +1,4 @@
-name: MEOW Release
+name: MEOW Source Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Existing MEOW release tag to build'
+        description: 'Existing MEOW source release tag'
         required: true
         default: 'MEOW-0.0.2'
 
@@ -15,17 +15,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.ref }}'
+  group: "${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}"
   cancel-in-progress: false
-
-env:
-  CARGO_INCREMENTAL: 0
-  RUST_BACKTRACE: short
-  HUSKY: 0
 
 jobs:
   validate:
-    name: Validate release
+    name: Validate source release
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -38,7 +33,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
-      - name: Validate tag and version
+      - name: Validate tag, version, and build instructions
         id: version
         shell: bash
         env:
@@ -54,333 +49,50 @@ jobs:
 
           TAG_COMMIT=$(git rev-parse HEAD)
           if ! git branch -r --contains "${TAG_COMMIT}" | grep -q 'origin/dev'; then
-            echo "Release tags must point to a commit on the dev branch."
+            echo 'Release tags must point to a commit on the dev branch.'
             exit 1
           fi
+
+          test -f BUILDING.md
+          test -f scripts/build-installer.mjs
+          node -e "const p=require('./package.json'); if (!p.scripts['build:installer']) process.exit(1)"
 
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "tag=${RELEASE_TAG}" >> "${GITHUB_OUTPUT}"
 
-  signing:
-    name: Validate release signing credentials
+  release:
+    name: Publish MEOW ${{ needs.validate.outputs.version }} source
     needs: validate
     runs-on: ubuntu-latest
-    env:
-      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-      WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-    steps:
-      - name: Refuse unsigned releases
-        shell: bash
-        run: |
-          missing=()
-          for name in \
-            APPLE_CERTIFICATE \
-            APPLE_CERTIFICATE_PASSWORD \
-            APPLE_ID \
-            APPLE_PASSWORD \
-            APPLE_TEAM_ID \
-            WINDOWS_CERTIFICATE \
-            WINDOWS_CERTIFICATE_PASSWORD
-          do
-            if [ -z "${!name}" ]; then
-              missing+=("${name}")
-            fi
-          done
-
-          if [ "${#missing[@]}" -ne 0 ]; then
-            printf 'Release signing secrets are missing:\n'
-            printf '  - %s\n' "${missing[@]}"
-            printf 'See docs/RELEASE_SIGNING.md before creating another release.\n'
-            exit 1
-          fi
-
-  build:
-    name: Build ${{ matrix.id }}
-    needs:
-      - validate
-      - signing
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - id: macos-arm64
-            os: macos-26
-            target: aarch64-apple-darwin
-            bundle: dmg
-            output_glob: target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
-            asset_suffix: macos_arm64.dmg
-          - id: macos-x86_64
-            os: macos-26-intel
-            target: x86_64-apple-darwin
-            bundle: dmg
-            output_glob: target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
-            asset_suffix: macos_x86_64.dmg
-          - id: windows-arm64
-            os: windows-latest
-            target: aarch64-pc-windows-msvc
-            bundle: nsis
-            output_glob: target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe
-            asset_suffix: windows_arm64-setup.exe
-          - id: windows-x86_64
-            os: windows-latest
-            target: x86_64-pc-windows-msvc
-            bundle: nsis
-            output_glob: target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
-            asset_suffix: windows_x86_64-setup.exe
-
-    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.validate.outputs.tag }}
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@1.95.0
-        with:
-          targets: ${{ matrix.target }}
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24.18.0'
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Download target dependencies
-        run: pnpm run prebuild ${{ matrix.target }}
-
-      - name: Import Apple Developer ID certificate
-        if: startsWith(matrix.id, 'macos-')
-        id: apple-signing
-        shell: bash
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-        run: |
-          CERTIFICATE_PATH="${RUNNER_TEMP}/meow-developer-id.p12"
-          KEYCHAIN_PATH="${RUNNER_TEMP}/meow-signing.keychain-db"
-          KEYCHAIN_PASSWORD="$(openssl rand -hex 24)"
-
-          printf '%s' "${APPLE_CERTIFICATE}" | base64 --decode > "${CERTIFICATE_PATH}"
-          security create-keychain -p "${KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
-          security set-keychain-settings -lut 21600 "${KEYCHAIN_PATH}"
-          security unlock-keychain -p "${KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
-          security list-keychains -d user -s "${KEYCHAIN_PATH}"
-          security import "${CERTIFICATE_PATH}" \
-            -k "${KEYCHAIN_PATH}" \
-            -P "${APPLE_CERTIFICATE_PASSWORD}" \
-            -T /usr/bin/codesign \
-            -T /usr/bin/security
-          security set-key-partition-list \
-            -S apple-tool:,apple:,codesign: \
-            -s \
-            -k "${KEYCHAIN_PASSWORD}" \
-            "${KEYCHAIN_PATH}"
-
-          IDENTITY="$(security find-identity -v -p codesigning "${KEYCHAIN_PATH}" | awk -F'"' '/Developer ID Application/ { print $2; exit }')"
-          if [ -z "${IDENTITY}" ]; then
-            echo 'The imported certificate does not contain a Developer ID Application identity.'
-            exit 1
-          fi
-
-          echo "identity=${IDENTITY}" >> "${GITHUB_OUTPUT}"
-          echo "keychain=${KEYCHAIN_PATH}" >> "${GITHUB_OUTPUT}"
-
-      - name: Import Windows Authenticode certificate
-        if: startsWith(matrix.id, 'windows-')
-        id: windows-signing
-        shell: pwsh
-        env:
-          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-        run: |
-          $certificatePath = Join-Path $env:RUNNER_TEMP 'meow-code-signing.pfx'
-          [IO.File]::WriteAllBytes(
-            $certificatePath,
-            [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE)
-          )
-
-          $password = ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
-          $imported = @(
-            Import-PfxCertificate -FilePath $certificatePath -CertStoreLocation 'Cert:\CurrentUser\My' -Password $password
-          )
-          $certificate = $imported |
-            Where-Object { $_.HasPrivateKey } |
-            Select-Object -First 1
-          if (-not $certificate) {
-            throw 'The PFX does not contain a code-signing certificate with a private key.'
-          }
-
-          $configPath = Join-Path $env:RUNNER_TEMP 'meow-windows-signing.json'
-          @{
-            bundle = @{
-              windows = @{
-                certificateThumbprint = $certificate.Thumbprint
-                digestAlgorithm = 'sha256'
-                timestampUrl = 'http://timestamp.digicert.com'
-              }
-            }
-          } | ConvertTo-Json -Depth 4 | Set-Content -Path $configPath -Encoding utf8
-
-          "config_path=$configPath" >> $env:GITHUB_OUTPUT
-
-      - name: Build and notarize macOS installer
-        if: startsWith(matrix.id, 'macos-')
-        env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          APPLE_SIGNING_IDENTITY: ${{ steps.apple-signing.outputs.identity }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundle }}
-
-      - name: Build signed Windows installer
-        if: startsWith(matrix.id, 'windows-')
-        env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundle }} --config "${{ steps.windows-signing.outputs.config_path }}"
-
-      - name: Verify macOS signature and notarization ticket
-        if: startsWith(matrix.id, 'macos-')
-        shell: bash
-        run: |
-          APP_PATH="$(find "target/${{ matrix.target }}/release/bundle/macos" -maxdepth 1 -name '*.app' -print -quit)"
-          DMG_PATH="$(find "target/${{ matrix.target }}/release/bundle/dmg" -maxdepth 1 -name '*.dmg' -print -quit)"
-          test -n "${APP_PATH}"
-          test -n "${DMG_PATH}"
-          codesign --verify --deep --strict --verbose=2 "${APP_PATH}"
-          spctl --assess --type execute --verbose=2 "${APP_PATH}"
-          xcrun stapler validate "${DMG_PATH}"
-
-      - name: Verify Windows Authenticode signatures
-        if: startsWith(matrix.id, 'windows-')
-        shell: pwsh
-        run: |
-          $installer = @(Get-ChildItem -Path "${{ matrix.output_glob }}" -File)
-          if ($installer.Count -ne 1) {
-            throw "Expected exactly one installer, found $($installer.Count)"
-          }
-          $application = Get-Item "target/${{ matrix.target }}/release/meow.exe"
-
-          foreach ($file in @($application, $installer[0])) {
-            $signature = Get-AuthenticodeSignature -FilePath $file.FullName
-            if ($signature.Status -ne 'Valid') {
-              throw "Invalid Authenticode signature for $($file.FullName): $($signature.StatusMessage)"
-            }
-          }
-
-      - name: Remove temporary Apple signing keychain
-        if: always() && startsWith(matrix.id, 'macos-')
-        shell: bash
-        run: |
-          KEYCHAIN_PATH="${{ steps.apple-signing.outputs.keychain }}"
-          if [ -n "${KEYCHAIN_PATH}" ]; then
-            security delete-keychain "${KEYCHAIN_PATH}" || true
-          fi
-
-      - name: Stage release asset
-        id: stage
-        shell: pwsh
-        run: |
-          $matches = @(Get-ChildItem -Path "${{ matrix.output_glob }}" -File)
-          if ($matches.Count -ne 1) {
-            throw "Expected exactly one installer, found $($matches.Count)"
-          }
-
-          $assetName = "MEOW_${{ needs.validate.outputs.version }}_${{ matrix.asset_suffix }}"
-          New-Item -ItemType Directory -Path "release-assets" -Force | Out-Null
-          $assetPath = Join-Path "release-assets" $assetName
-          Copy-Item -Path $matches[0].FullName -Destination $assetPath
-          "asset_path=$((Resolve-Path $assetPath).Path)" >> $env:GITHUB_OUTPUT
-
-      - name: Upload release asset
-        uses: actions/upload-artifact@v7
-        with:
-          name: release-${{ matrix.id }}
-          path: ${{ steps.stage.outputs.asset_path }}
-          if-no-files-found: error
-
-  release:
-    name: Publish MEOW ${{ needs.validate.outputs.version }}
-    needs:
-      - validate
-      - build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download release assets
-        uses: actions/download-artifact@v8
-        with:
-          pattern: release-*
-          path: release-assets
-          merge-multiple: true
-
-      - name: Verify release assets
-        shell: bash
-        run: |
-          mapfile -t ASSETS < <(find release-assets -maxdepth 1 -type f | sort)
-          if [ "${#ASSETS[@]}" -ne 4 ]; then
-            printf 'Expected exactly four release assets, found %s:\n' "${#ASSETS[@]}"
-            printf '%s\n' "${ASSETS[@]}"
-            exit 1
-          fi
-
-          printf 'Release assets:\n'
-          printf '%s\n' "${ASSETS[@]}"
-          sha256sum "${ASSETS[@]}"
-
-      - name: Publish GitHub Release
+      - name: Publish source-only GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           name: 'MEOW ${{ needs.validate.outputs.version }}'
           tag_name: ${{ needs.validate.outputs.tag }}
           body: |
-            MEOW 0.0.2 主要改进发布安全、Windows 窗口体验、网页订阅导入和 Windows 托盘图标适配。
+            MEOW 0.0.2 暂时仅以源代码形式发布，不提供官方预编译二进制文件。
 
-            - macOS 使用 Developer ID Application 签名并通过 Apple 公证
-            - Windows 使用 Authenticode 签名并附带可信时间戳
-            - Windows 默认使用系统标题栏，无边框模式使用 Windows 风格圆角与窗口按钮
-            - 支持 `meow://`、`clash://` 和 `clash-verge://` 网页订阅导入
-            - Windows 托盘图标会根据系统深浅色自动切换
+            GitHub 会自动提供 `Source code (zip)` 与 `Source code (tar.gz)`。下载源码后，请按照仓库中的 `BUILDING.md` 构建：
 
-            本次提供以下四种安装包：
+            - macOS：生成 DMG，构建完成后自动打开，由用户决定是否安装
+            - Windows：生成 NSIS 安装包，构建完成后打开安装向导，由用户决定继续或取消
+            - 本地生成的安装包没有 MEOW 官方签名，请只构建和运行可信提交
 
-            - macOS ARM64
-            - macOS x86_64
-            - Windows ARM64
-            - Windows x86_64
-
-            macOS 安装包已使用 Developer ID Application 签名并通过 Apple 公证；Windows 安装包已使用 Authenticode 证书签名并附带可信时间戳。
+            0.0.1 原有的未签名二进制附件已经撤回。正式签名证书准备完成前，MEOW Release 将仅提供源代码。
 
             ---
 
-            MEOW 0.0.2 focuses on release security, the Windows window experience, website subscription imports, and Windows tray icon adaptation.
+            MEOW 0.0.2 is currently distributed as source code only. Official prebuilt binaries are not provided.
 
-            - macOS artifacts are signed with Developer ID Application and notarized by Apple
-            - Windows artifacts are Authenticode-signed and timestamped
-            - Windows uses the native title bar by default, with Windows-style corners and controls in custom-frame mode
-            - Website imports support `meow://`, `clash://`, and `clash-verge://`
-            - Windows tray icons automatically adapt to the system light or dark appearance
+            GitHub automatically provides `Source code (zip)` and `Source code (tar.gz)`. Follow `BUILDING.md` in the repository to build locally:
 
-            Installers are provided for macOS and Windows on both ARM64 and x86_64. macOS artifacts are signed with Developer ID Application and notarized by Apple; Windows artifacts are Authenticode-signed and timestamped.
-          files: |
-            release-assets/*.dmg
-            release-assets/*.exe
-          fail_on_unmatched_files: true
+            - macOS: creates and opens a DMG; installation remains the user's choice
+            - Windows: creates an NSIS installer and opens its setup wizard; the user may continue or cancel
+            - locally built installers are not officially signed by MEOW; only build and run trusted source
+
+            The unsigned binary assets previously attached to 0.0.1 have been withdrawn. MEOW releases will remain source-only until official signing credentials are available.
           generate_release_notes: true
           draft: false
           prerelease: false

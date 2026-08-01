@@ -25,9 +25,9 @@
 
 ## 安装
 
-请从 [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2) 下载适合系统与处理器架构的安装包。当前提供 macOS 和 Windows 的 ARM64、x86_64 版本。
+MEOW 0.0.2 暂时仅发布源代码，不提供官方预编译二进制文件。请从 [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2) 获取源码，并按照 [BUILDING.md](./BUILDING.md) 在本机生成安装包。
 
-MEOW 0.0.2 的发布流程要求 macOS 安装包完成 Developer ID 签名和 Apple 公证，Windows 安装包完成 Authenticode 签名和时间戳验证；任一签名凭据缺失时不会发布安装包。
+构建脚本在 macOS 上生成并打开 DMG，在 Windows 上生成并打开 NSIS 安装向导；用户自行决定是否继续安装。以上本地产物没有 Developer ID 或 Authenticode 签名，请只构建和运行可信提交。
 
 ## 功能
 
@@ -41,7 +41,7 @@ MEOW 当前完整继承 Clash Verge Rev v2.5.2 的功能：
 - 可视化节点与规则编辑
 - WebDAV 配置备份和同步
 
-MEOW 0.0.1 还包含实验性的跨平台按应用路由：所有应用流量仍进入 TUN，选定应用按进程匹配到指定策略，其他应用继续执行原有规则。该功能要求同时开启 TUN 和规则模式；当前提供 macOS 与 Windows 安装包，Linux 版本将在后续完成验证后发布。
+MEOW 0.0.1 还包含实验性的跨平台按应用路由：所有应用流量仍进入 TUN，选定应用按进程匹配到指定策略，其他应用继续执行原有规则。该功能要求同时开启 TUN 和规则模式；当前支持在 macOS 与 Windows 本地构建安装包，Linux 版本将在后续完成验证。
 
 功能使用与常见问题可参考 [Clash Verge Rev 文档](https://clash-verge-rev.github.io/)。请注意，该文档由上游维护，其中的项目名称、下载地址和社区入口均指向上游，而非 MEOW。
 
@@ -54,6 +54,8 @@ pnpm install
 pnpm run prebuild
 pnpm dev
 ```
+
+如需生成可安装的 DMG 或 Windows 安装包，请参阅 [本地构建说明](./BUILDING.md)。
 
 ## 贡献
 

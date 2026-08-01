@@ -1,8 +1,8 @@
 ## MEOW 0.0.2（2026-08-01）
 
-- 发布流程强制校验 macOS 与 Windows 签名凭据，防止再次发布未签名安装包
-- 接入 macOS Developer ID Application 签名、Apple 公证、票据装订及发布前验证
-- 接入 Windows Authenticode 签名、SHA-256 时间戳及发布前验证
+- 0.0.2 改为仅发布源代码，暂不提供未经签名的官方预编译安装包
+- 新增跨平台本地安装包构建脚本：macOS 生成并打开 DMG，Windows 生成并打开 NSIS 安装向导
+- 保留 macOS Developer ID 与 Windows Authenticode 签名方案，待取得正式凭据后用于未来二进制发布
 - Windows 默认启用系统标题栏，由 Windows 11 处理原生窗口圆角
 - 优化 Windows 自定义标题栏的圆角、高度、按钮尺寸和对齐方式
 - 新增 `meow://`、`clash://` 和 `clash-verge://` 网页订阅导入支持

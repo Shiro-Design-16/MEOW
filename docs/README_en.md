@@ -25,9 +25,9 @@ An independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-r
 
 ## Install
 
-Download the installer for your operating system and processor architecture from the [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2). ARM64 and x86_64 builds are provided for macOS and Windows.
+MEOW 0.0.2 is currently distributed as source code only; official prebuilt binaries are not provided. Get the source from the [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2) and follow [BUILDING.md](../BUILDING.md) to create an installer locally.
 
-The MEOW 0.0.2 release pipeline requires macOS artifacts to pass Developer ID signing and Apple notarization, and Windows artifacts to pass Authenticode signing and timestamp verification. No installers are published when any required signing credential is missing.
+The build script creates and opens a DMG on macOS or creates and launches an NSIS setup wizard on Windows. Installation remains the user's choice. Locally built installers do not carry an official MEOW Developer ID or Authenticode signature, so only build and run trusted commits.
 
 ## Features
 
@@ -41,7 +41,7 @@ MEOW currently inherits the complete Clash Verge Rev v2.5.2 feature set:
 - Visual node and rule editors
 - WebDAV configuration backup and sync
 
-MEOW 0.0.1 also includes experimental cross-platform per-app routing. All application traffic still enters TUN; selected processes use a chosen policy, while other applications continue through the existing rules. Both TUN and Rule mode are required. macOS and Windows installers are currently provided; Linux builds will follow after further validation.
+MEOW 0.0.1 also includes experimental cross-platform per-app routing. All application traffic still enters TUN; selected processes use a chosen policy, while other applications continue through the existing rules. Both TUN and Rule mode are required. Installers can currently be built locally on macOS and Windows; Linux support will follow after further validation.
 
 For usage and troubleshooting, refer to the [Clash Verge Rev documentation](https://clash-verge-rev.github.io/). That documentation is maintained upstream, so its project names, downloads, and community links refer to Clash Verge Rev rather than MEOW.
 
@@ -54,6 +54,8 @@ pnpm install
 pnpm run prebuild
 pnpm dev
 ```
+
+To produce an installable DMG or Windows setup package, see the [local build instructions](../BUILDING.md).
 
 ## Contributions
 

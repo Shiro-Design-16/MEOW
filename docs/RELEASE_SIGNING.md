@@ -1,6 +1,8 @@
 # MEOW release signing
 
-The release workflow refuses to publish artifacts unless both Apple and Windows signing credentials are configured. This prevents a new unsigned release from being created accidentally.
+MEOW 0.0.2 is distributed as source code only. The release workflow does not build or attach binaries, so signing credentials are not required for this release.
+
+The configuration below is retained for a future release that restores official prebuilt installers. Do not attach unsigned CI artifacts to a public MEOW release.
 
 ## macOS
 
@@ -33,6 +35,6 @@ The workflow imports the certificate into the runner's current-user certificate 
 
 An ordinary organization-validated certificate establishes publisher identity, but Microsoft SmartScreen reputation can still take time to accumulate. An EV certificate or Microsoft Trusted Signing can provide a stronger first-download experience if MEOW later adopts either service.
 
-## Existing MEOW 0.0.1 artifacts
+## MEOW 0.0.1 artifacts
 
-The files already attached to MEOW 0.0.1 were built before this enforcement was added and remain unsigned. Replace them only after all seven secrets above are configured and a signed rebuild has passed the verification steps.
+The unsigned binary assets originally attached to MEOW 0.0.1 have been withdrawn. Keep the release and tag as historical source records; do not restore those assets. Publish new official installers only from a future version after its signing and verification workflow is enabled.
