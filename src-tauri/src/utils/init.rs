@@ -514,6 +514,9 @@ pub async fn init_resources() -> Result<()> {
 }
 
 /// initialize url scheme
+#[cfg(any(target_os = "windows", target_os = "linux"))]
+const DEEP_LINK_SCHEMES: &[&str] = &["meow", "clash", "clash-verge"];
+
 #[cfg(target_os = "windows")]
 pub fn init_scheme() -> Result<()> {
     use tauri::utils::platform::current_exe;
@@ -524,13 +527,18 @@ pub fn init_scheme() -> Result<()> {
     let app_exe = app_exe.to_string_lossy().into_owned();
 
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-    let (clash, _) = hkcu.create_subkey("Software\\Classes\\Clash")?;
-    clash.set_value("", &"MEOW")?;
-    clash.set_value("URL Protocol", &"MEOW URL Scheme Protocol")?;
-    let (default_icon, _) = hkcu.create_subkey("Software\\Classes\\Clash\\DefaultIcon")?;
-    default_icon.set_value("", &app_exe)?;
-    let (command, _) = hkcu.create_subkey("Software\\Classes\\Clash\\Shell\\Open\\Command")?;
-    command.set_value("", &format!("{app_exe} \"%1\""))?;
+    for scheme in DEEP_LINK_SCHEMES {
+        let class_path = format!("Software\\Classes\\{scheme}");
+        let (protocol, _) = hkcu.create_subkey(&class_path)?;
+        protocol.set_value("", &"MEOW URL Scheme")?;
+        protocol.set_value("URL Protocol", &"")?;
+
+        let (default_icon, _) = hkcu.create_subkey(format!("{class_path}\\DefaultIcon"))?;
+        default_icon.set_value("", &format!("\"{app_exe}\",0"))?;
+
+        let (command, _) = hkcu.create_subkey(format!("{class_path}\\Shell\\Open\\Command"))?;
+        command.set_value("", &format!("\"{app_exe}\" \"%1\""))?;
+    }
 
     Ok(())
 }
@@ -560,9 +568,6 @@ pub fn init_scheme() -> Result<()> {
 pub const fn init_scheme() -> Result<()> {
     Ok(())
 }
-
-#[cfg(target_os = "linux")]
-const DEEP_LINK_SCHEMES: &[&str] = &["clash", "clash-verge"];
 
 pub async fn startup_script() -> Result<()> {
     let app_handle = handle::Handle::app_handle();

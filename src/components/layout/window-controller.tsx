@@ -63,7 +63,7 @@ export const WindowResizeHandles = () => {
   )
 }
 
-export const WindowControls = forwardRef(function WindowControls(props, ref) {
+export const WindowControls = forwardRef(function WindowControls(_props, ref) {
   const OS = getSystem()
   const {
     currentWindow,
@@ -101,14 +101,22 @@ export const WindowControls = forwardRef(function WindowControls(props, ref) {
     <Box
       sx={{
         display: 'flex',
-        gap: 1,
+        gap: OS === 'windows' ? 0 : 1,
         alignItems: 'center',
         '> button': {
           cursor: 'default',
-          width: 24,
-          height: 24,
+          width: OS === 'windows' ? 46 : 24,
+          height: OS === 'windows' ? 36 : 24,
           p: 0,
+          borderRadius: OS === 'windows' ? 0 : undefined,
         },
+        ...(OS === 'windows'
+          ? {
+              '> button:last-of-type': {
+                borderTopRightRadius: 'calc(var(--window-corner-radius) - 1px)',
+              },
+            }
+          : {}),
       }}
     >
       {OS === 'macos' && (

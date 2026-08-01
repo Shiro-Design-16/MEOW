@@ -16,6 +16,8 @@ use super::handle;
 use anyhow::Result;
 use smartstring::alias::String;
 use std::collections::HashMap;
+#[cfg(target_os = "windows")]
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use tauri::{
     AppHandle, Wry,
@@ -53,6 +55,8 @@ pub struct Tray {
     limiter: SystemLimiter,
     #[cfg(target_os = "macos")]
     speed_controller: speed_task::TraySpeedController,
+    #[cfg(target_os = "windows")]
+    windows_theme_watcher_started: AtomicBool,
 }
 
 impl TrayState {
@@ -66,12 +70,64 @@ impl TrayState {
         } else {
             IconKind::Common
         };
+        #[cfg(target_os = "windows")]
+        let light_taskbar = windows_taskbar_uses_light_theme();
+
         match kind {
-            IconKind::Common => include_bytes!("../../../../.generated/tray/tray-idle.png"),
-            IconKind::SysProxy => include_bytes!("../../../../.generated/tray/tray-sys.png"),
-            IconKind::Tun => include_bytes!("../../../../.generated/tray/tray-tun.png"),
+            IconKind::Common => {
+                #[cfg(target_os = "windows")]
+                {
+                    if light_taskbar {
+                        include_bytes!("../../../../.generated/tray/tray-idle-light.png")
+                    } else {
+                        include_bytes!("../../../../.generated/tray/tray-idle-dark.png")
+                    }
+                }
+                #[cfg(not(target_os = "windows"))]
+                {
+                    include_bytes!("../../../../.generated/tray/tray-idle.png")
+                }
+            }
+            IconKind::SysProxy => {
+                #[cfg(target_os = "windows")]
+                {
+                    if light_taskbar {
+                        include_bytes!("../../../../.generated/tray/tray-sys-light.png")
+                    } else {
+                        include_bytes!("../../../../.generated/tray/tray-sys-dark.png")
+                    }
+                }
+                #[cfg(not(target_os = "windows"))]
+                {
+                    include_bytes!("../../../../.generated/tray/tray-sys.png")
+                }
+            }
+            IconKind::Tun => {
+                #[cfg(target_os = "windows")]
+                {
+                    if light_taskbar {
+                        include_bytes!("../../../../.generated/tray/tray-tun-light.png")
+                    } else {
+                        include_bytes!("../../../../.generated/tray/tray-tun-dark.png")
+                    }
+                }
+                #[cfg(not(target_os = "windows"))]
+                {
+                    include_bytes!("../../../../.generated/tray/tray-tun.png")
+                }
+            }
         }
     }
+}
+
+#[cfg(target_os = "windows")]
+fn windows_taskbar_uses_light_theme() -> bool {
+    use winreg::{RegKey, enums::HKEY_CURRENT_USER};
+
+    RegKey::predef(HKEY_CURRENT_USER)
+        .open_subkey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize")
+        .and_then(|key| key.get_value::<u32, _>("SystemUsesLightTheme"))
+        .map_or(true, |value| value != 0)
 }
 
 impl Default for Tray {
@@ -81,6 +137,8 @@ impl Default for Tray {
             limiter: Limiter::new(Duration::from_millis(TRAY_CLICK_DEBOUNCE_MS), SystemClock),
             #[cfg(target_os = "macos")]
             speed_controller: speed_task::TraySpeedController::new(),
+            #[cfg(target_os = "windows")]
+            windows_theme_watcher_started: AtomicBool::new(false),
         }
     }
 }
@@ -103,6 +161,8 @@ impl Tray {
         match self.create_tray_from_handle(app_handle).await {
             Ok(_) => {
                 logging!(info, Type::Tray, "System tray created successfully");
+                #[cfg(target_os = "windows")]
+                self.start_windows_theme_watcher();
             }
             Err(e) => {
                 // Don't return error, let application continue running without tray
@@ -114,6 +174,32 @@ impl Tray {
             }
         }
         Ok(())
+    }
+
+    #[cfg(target_os = "windows")]
+    fn start_windows_theme_watcher(&self) {
+        if self.windows_theme_watcher_started.swap(true, Ordering::SeqCst) {
+            return;
+        }
+
+        AsyncHandler::spawn(|| async move {
+            let mut light_taskbar = windows_taskbar_uses_light_theme();
+            loop {
+                tokio::time::sleep(Duration::from_secs(2)).await;
+                if handle::Handle::global().is_exiting() {
+                    return;
+                }
+
+                let next_light_taskbar = windows_taskbar_uses_light_theme();
+                if next_light_taskbar == light_taskbar {
+                    continue;
+                }
+                light_taskbar = next_light_taskbar;
+
+                let verge = Config::verge().await.latest_arc();
+                logging_error!(Type::Tray, Tray::global().update_icon(&verge));
+            }
+        });
     }
 
     /// 更新托盘点击行为

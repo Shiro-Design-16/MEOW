@@ -6,9 +6,18 @@ use tauri::Url;
 use crate::{
     config::{Config, PrfItem, profiles},
     core::{CoreManager, handle, timer::Timer},
-    utils::help,
+    utils::{help, window_manager::WindowManager},
 };
 use clash_verge_logging::{Type, logging, logging_error};
+
+const SUPPORTED_SCHEMES: &[&str] = &["meow", "clash", "clash-verge"];
+
+#[cfg(any(not(target_os = "macos"), test))]
+pub(crate) fn is_supported_deep_link(param: &str) -> bool {
+    Url::parse(param)
+        .ok()
+        .is_some_and(|url| SUPPORTED_SCHEMES.contains(&url.scheme()))
+}
 
 pub(super) async fn resolve_scheme(param: &str) -> Result<()> {
     let param_str = if param.starts_with("[") && param.len() > 4 {
@@ -34,12 +43,13 @@ pub(super) async fn resolve_scheme(param: &str) -> Result<()> {
         return Ok(());
     };
 
+    WindowManager::show_main_window().await;
     import_subscription(&url, name.as_ref()).await;
     Ok(())
 }
 
 fn extract_subscription_info(link_parsed: &Url) -> Option<(std::string::String, Option<String>)> {
-    if !matches!(link_parsed.scheme(), "clash" | "clash-verge") {
+    if !SUPPORTED_SCHEMES.contains(&link_parsed.scheme()) {
         return None;
     }
 
@@ -53,10 +63,26 @@ fn extract_subscription_info(link_parsed: &Url) -> Option<(std::string::String, 
 
 fn extract_subscription_url(link_parsed: &Url) -> Option<std::string::String> {
     let query = link_parsed.query()?;
-    let prefix = "url=";
-    let pos = query.find(prefix)?;
-    let raw_url = query[pos + prefix.len()..].trim();
-    Some(decode_subscription_url(raw_url))
+    let value_start = if let Some(rest) = query.strip_prefix("url=") {
+        rest
+    } else {
+        let pos = query.find("&url=")?;
+        query.get(pos + "&url=".len()..)?
+    };
+
+    // `name` is the only top-level parameter used by Clash import links. Keeping
+    // every other ampersand intact preserves subscription URLs whose own query
+    // parameters were not percent-encoded by the website.
+    let raw_url = value_start
+        .rfind("&name=")
+        .and_then(|pos| value_start.get(..pos))
+        .unwrap_or(value_start)
+        .trim();
+    let decoded = decode_subscription_url(raw_url);
+    Url::parse(&decoded)
+        .ok()
+        .filter(|url| matches!(url.scheme(), "http" | "https"))?;
+    Some(decoded)
 }
 
 fn decode_subscription_url(raw_url: &str) -> std::string::String {
@@ -155,5 +181,48 @@ async fn refresh_core_config() {
             logging!(error, Type::Config, "Apply config error: {}", err);
             handle::Handle::notice_message("update_failed", format!("{err}"));
         }
+    }
+}
+
+#[cfg(test)]
+#[allow(clippy::unwrap_used)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn recognizes_all_supported_import_schemes() {
+        for scheme in SUPPORTED_SCHEMES {
+            assert!(is_supported_deep_link(&format!(
+                "{scheme}://install-config?url=https%3A%2F%2Fexample.com%2Fprofile.yaml"
+            )));
+        }
+        assert!(!is_supported_deep_link(
+            "https://example.com/?url=https://example.com/profile.yaml"
+        ));
+    }
+
+    #[test]
+    fn extracts_encoded_subscription_and_name() {
+        let link = Url::parse(
+            "clash://install-config?url=https%3A%2F%2Fexample.com%2Fprofile.yaml%3Ftoken%3Da%26mode%3Db&name=Example",
+        )
+        .unwrap();
+        let (url, name) = extract_subscription_info(&link).unwrap();
+        assert_eq!(url, "https://example.com/profile.yaml?token=a&mode=b");
+        assert_eq!(name.as_deref(), Some("Example"));
+    }
+
+    #[test]
+    fn preserves_unescaped_subscription_query_parameters() {
+        let link = Url::parse("meow://install-config?url=https://example.com/profile.yaml?token=a&mode=b&name=Example")
+            .unwrap();
+        let (url, _) = extract_subscription_info(&link).unwrap();
+        assert_eq!(url, "https://example.com/profile.yaml?token=a&mode=b");
+    }
+
+    #[test]
+    fn rejects_non_http_subscription_targets() {
+        let link = Url::parse("clash://install-config?url=file%3A%2F%2F%2Ftmp%2Fprofile.yaml").unwrap();
+        assert!(extract_subscription_info(&link).is_none());
     }
 }

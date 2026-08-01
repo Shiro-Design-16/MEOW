@@ -25,9 +25,9 @@
 
 ## 安装
 
-请从 [MEOW 0.0.1 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.1) 下载适合系统与处理器架构的安装包。当前提供 macOS 和 Windows 的 ARM64、x86_64 版本。
+请从 [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2) 下载适合系统与处理器架构的安装包。当前提供 macOS 和 Windows 的 ARM64、x86_64 版本。
 
-当前安装包尚未进行 Apple 公证或商业代码签名，macOS Gatekeeper 与 Windows SmartScreen 可能显示安全提醒。
+MEOW 0.0.2 的发布流程要求 macOS 安装包完成 Developer ID 签名和 Apple 公证，Windows 安装包完成 Authenticode 签名和时间戳验证；任一签名凭据缺失时不会发布安装包。
 
 ## 功能
 

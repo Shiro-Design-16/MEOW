@@ -26,6 +26,12 @@ body {
   --window-corner-radius: 23px;
 }
 
+html.meow-platform-windows {
+  // Windows 11 supplies its own rounded frame when the native title bar is
+  // enabled. Keep the optional custom frame closer to the native radius.
+  --window-corner-radius: 8px;
+}
+
 ::selection {
   color: var(--selection-color);
   background-color: var(--primary-main);

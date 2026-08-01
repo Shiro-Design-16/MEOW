@@ -199,7 +199,6 @@
 }
 
 .linux,
-.windows,
 .unknown {
   &.layout {
     .the_titlebar {
@@ -225,6 +224,36 @@
       padding-left: 10px;
       padding-right: 20px;
       padding-bottom: 16px;
+    }
+
+    .layout-content__right .the-content {
+      top: 5px;
+    }
+  }
+}
+
+.windows {
+  &.layout {
+    .the_titlebar {
+      width: 100%;
+      height: 36px;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0;
+      box-sizing: border-box;
+      border-bottom: 1px solid var(--divider-color);
+
+      &-drag-region {
+        align-self: stretch;
+        flex: 1 1 auto;
+      }
+    }
+
+    .layout-content__left .the-logo {
+      flex: 1 0 58px;
+      margin-top: 10px;
+      margin-left: 10px;
+      padding: 5px 20px 16px 10px;
     }
 
     .layout-content__right .the-content {

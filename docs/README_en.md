@@ -25,9 +25,9 @@ An independent fork of <a href="https://github.com/clash-verge-rev/clash-verge-r
 
 ## Install
 
-Download the installer for your operating system and processor architecture from the [MEOW 0.0.1 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.1). ARM64 and x86_64 builds are provided for macOS and Windows.
+Download the installer for your operating system and processor architecture from the [MEOW 0.0.2 Release](https://github.com/Shiro-Design-16/MEOW/releases/tag/MEOW-0.0.2). ARM64 and x86_64 builds are provided for macOS and Windows.
 
-These installers are not yet Apple-notarized or commercially code-signed, so macOS Gatekeeper or Windows SmartScreen may display a security warning.
+The MEOW 0.0.2 release pipeline requires macOS artifacts to pass Developer ID signing and Apple notarization, and Windows artifacts to pass Authenticode signing and timestamp verification. No installers are published when any required signing credential is missing.
 
 ## Features
 

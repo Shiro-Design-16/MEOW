@@ -147,6 +147,15 @@ const Layout = () => {
   const roundedWindow = decorated === false && !maximized
 
   useEffect(() => {
+    const className = `meow-platform-${OS}`
+    document.documentElement.classList.add(className)
+
+    return () => {
+      document.documentElement.classList.remove(className)
+    }
+  }, [])
+
+  useEffect(() => {
     const className = 'meow-rounded-window'
     document.documentElement.classList.toggle(className, roundedWindow)
 

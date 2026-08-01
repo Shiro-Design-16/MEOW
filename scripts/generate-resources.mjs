@@ -30,9 +30,13 @@ const macIconBundle = path.join(
   'app-icon-mac.icon',
 )
 
-const renderSvg = (source, target, width) => {
+const renderSvg = (source, target, width, monochromeColor) => {
   mkdirSync(path.dirname(target), { recursive: true })
-  const svg = readFileSync(source, 'utf8')
+  let svg = readFileSync(source, 'utf8')
+  if (monochromeColor) {
+    const style = `<style>path { fill: ${monochromeColor} !important; stroke: ${monochromeColor} !important; }</style>`
+    svg = svg.replace(/(<svg\b[^>]*>)/u, `$1${style}`)
+  }
   const renderer = new Resvg(svg, { fitTo: { mode: 'width', value: width } })
   writeFileSync(target, renderer.render().asPng())
 }
@@ -352,10 +356,21 @@ const generateTrayIcons = () => {
     [theme.assets.tray.tun, 'tray-tun.png'],
   ]
   for (const [source, target] of entries) {
+    const resolvedSource = resolveThemeAsset(source)
+    renderSvg(resolvedSource, path.join(generatedDir, 'tray', target), 64)
+
+    const basename = path.basename(target, '.png')
     renderSvg(
-      resolveThemeAsset(source),
-      path.join(generatedDir, 'tray', target),
+      resolvedSource,
+      path.join(generatedDir, 'tray', `${basename}-light.png`),
       64,
+      '#000000',
+    )
+    renderSvg(
+      resolvedSource,
+      path.join(generatedDir, 'tray', `${basename}-dark.png`),
+      64,
+      '#ffffff',
     )
   }
 }

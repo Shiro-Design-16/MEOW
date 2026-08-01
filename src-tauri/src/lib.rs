@@ -88,6 +88,20 @@ mod app_init {
             let _ = app.deep_link().register_all();
         }
 
+        match app.deep_link().get_current() {
+            Ok(Some(urls)) => {
+                AsyncHandler::spawn(move || async move {
+                    if let Some(url) = urls.first()
+                        && let Err(e) = resolve::resolve_scheme(url.as_ref()).await
+                    {
+                        logging!(error, Type::Setup, "Failed to resolve initial scheme: {}", e);
+                    }
+                });
+            }
+            Ok(None) => {}
+            Err(e) => logging!(warn, Type::Setup, "Failed to read initial deep link: {}", e),
+        }
+
         app.deep_link().on_open_url(|event| {
             let urls = event.urls();
             AsyncHandler::spawn(move || async move {

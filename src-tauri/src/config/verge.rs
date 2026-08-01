@@ -34,6 +34,10 @@ const fn default_true() -> bool {
     true
 }
 
+const fn default_prefer_system_titlebar() -> bool {
+    cfg!(target_os = "windows")
+}
+
 /// ### `verge.yaml` schema
 #[derive(Default, Debug, Clone, Deserialize, Serialize)]
 pub struct IVerge {
@@ -407,7 +411,7 @@ impl IVerge {
             language: Some(clash_verge_i18n::system_language().into()),
             theme_mode: Some("system".into()),
             active_theme: Some("meow.default".into()),
-            prefer_system_titlebar: Some(false),
+            prefer_system_titlebar: Some(default_prefer_system_titlebar()),
             #[cfg(not(target_os = "windows"))]
             env_type: Some("bash".into()),
             #[cfg(target_os = "windows")]

@@ -78,7 +78,7 @@ export const LayoutViewer = forwardRef<DialogRef>((_, ref) => {
             )}
           />
           <GuardState
-            value={verge?.prefer_system_titlebar ?? false}
+            value={verge?.prefer_system_titlebar ?? OS === 'windows'}
             valueProps="checked"
             onCatch={onError}
             onFormat={onSwitchFormat}
